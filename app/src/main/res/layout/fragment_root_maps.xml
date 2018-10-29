@@ -8,10 +8,9 @@
 
     <fragment
         android:id="@+id/place_autocomplete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-        />
+        android:layout_width="423dp"
+        android:layout_height="wrap_content" />
 
     <FrameLayout
 
