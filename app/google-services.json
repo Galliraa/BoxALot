@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1044934973536",
+    "firebase_url": "https://boxalot-f99ed.firebaseio.com",
+    "project_id": "boxalot-f99ed",
+    "storage_bucket": "boxalot-f99ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1044934973536:android:df3da81c2ada2c93",
+        "android_client_info": {
+          "package_name": "com.example.kenne.box_a_lot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1044934973536-53rkag0pva7phbj2j75n6fmdf9h7eo0c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kenne.box_a_lot",
+            "certificate_hash": "1a43c22f2eb431c447e82d122f0c93d2c377fd1e"
+          }
+        },
+        {
+          "client_id": "1044934973536-kkncqis25cmc2h80qfcqj3ovet4n5iqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa_THT0Pfb81Ch6nW22_fQcvhqARXzD0M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1044934973536-kkncqis25cmc2h80qfcqj3ovet4n5iqe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

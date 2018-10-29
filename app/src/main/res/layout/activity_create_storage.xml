@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CreateStorageActivity">
+
+    <EditText
+        android:id="@+id/countryET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/input_room_country"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/cityET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="@string/input_room_city" />
+
+    <EditText
+        android:id="@+id/addressET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="@string/input_room_address" />
+
+    <EditText
+        android:id="@+id/priceET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="@string/input_room_price" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/storageIV"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            android:src="@drawable/add_icon"
+            android:scaleType="centerCrop"/>
+
+    </android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/submitStorageBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Opret" />
+
+</LinearLayout>

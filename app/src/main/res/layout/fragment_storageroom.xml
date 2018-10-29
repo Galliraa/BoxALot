@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/storageIV"
+        android:layout_width="99dp"
+        android:layout_height="99dp"
+        android:src="@drawable/garage_depot"
+        android:contentDescription="@string/input_room_city"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/priceTV"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <TextView
+            android:id="@+id/addressTV"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <TextView
+            android:id="@+id/descTV"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+    </LinearLayout>
+</LinearLayout>
