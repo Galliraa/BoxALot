@@ -154,10 +154,11 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
                         @Override
                         public void onSuccess(Location location) {
                             // Show Sydney on the map.
-                            mMap.moveCamera(CameraUpdateFactory
-                                    .newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 10));
+
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
+                                mMap.moveCamera(CameraUpdateFactory
+                                        .newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 10));
                                 // Logic to handle location object
                             }
                         }

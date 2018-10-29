@@ -3,6 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.example.kenne.box_a_lot"
         minSdkVersion 17
         targetSdkVersion 28
