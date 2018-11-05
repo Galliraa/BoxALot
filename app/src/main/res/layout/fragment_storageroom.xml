@@ -9,7 +9,8 @@
         android:layout_width="99dp"
         android:layout_height="99dp"
         android:src="@drawable/garage_depot"
-        android:contentDescription="@string/input_room_city"/>
+        android:contentDescription="@string/input_room_city"
+        />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

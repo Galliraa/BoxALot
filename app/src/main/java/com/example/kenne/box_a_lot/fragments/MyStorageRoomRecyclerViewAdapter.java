@@ -2,10 +2,9 @@ package com.example.kenne.box_a_lot.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +22,6 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -33,12 +29,13 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyStorageRoomRecyclerViewAdapter extends RecyclerView.Adapter<MyStorageRoomRecyclerViewAdapter.ViewHolder> {
+public class MyStorageRoomRecyclerViewAdapter extends RecyclerView.Adapter<MyStorageRoomRecyclerViewAdapter.MyStorageRoomRecyclerViewHolder> {
 
     private FirebaseStorage FBstorage = FirebaseStorage.getInstance();
     private final List<StorageRoom> mValues;
     private final OnListFragmentInteractionListener mListener;
     private Context context;
+    FloatingActionButton listFab;
 
     public MyStorageRoomRecyclerViewAdapter(List<StorageRoom> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
@@ -47,14 +44,14 @@ public class MyStorageRoomRecyclerViewAdapter extends RecyclerView.Adapter<MySto
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_storageroom, parent, false);
-        return new ViewHolder(view);
+    public MyStorageRoomRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_storageroom, parent, false);
+        listFab = (FloatingActionButton) ((Activity)context).findViewById(R.id.listviewFabBtn);
+        return new MyStorageRoomRecyclerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyStorageRoomRecyclerViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.mPriceTV.setText(mValues.get(position).getPrice());
         holder.mAddressTV.setText(mValues.get(position).getAddress());
@@ -89,17 +86,6 @@ public class MyStorageRoomRecyclerViewAdapter extends RecyclerView.Adapter<MySto
                 }
             });
         }
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
     }
 
     @Override
@@ -107,7 +93,7 @@ public class MyStorageRoomRecyclerViewAdapter extends RecyclerView.Adapter<MySto
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class MyStorageRoomRecyclerViewHolder extends RecyclerView.ViewHolder{
         public final View mView;
         public final ImageView mStoragePic;
         public final TextView mPriceTV;
@@ -115,7 +101,7 @@ public class MyStorageRoomRecyclerViewAdapter extends RecyclerView.Adapter<MySto
         public final TextView mDescriptionTV;
         public StorageRoom mItem;
 
-        public ViewHolder(View view) {
+        public MyStorageRoomRecyclerViewHolder(View view) {
             super(view);
             mView = view;
             mStoragePic = (ImageView) view.findViewById(R.id.storageIV);

@@ -2,23 +2,24 @@ package com.example.kenne.box_a_lot.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.kenne.box_a_lot.R;
+import com.example.kenne.box_a_lot.interfaces.ClickListener;
+import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
 import com.example.kenne.box_a_lot.models.StorageRoom;
+import com.example.kenne.box_a_lot.other.RecyclerTouchListener;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
+
 public class StorageRoomFragment extends Fragment {
 
     // TODO: Customize parameter argument names
@@ -26,11 +27,9 @@ public class StorageRoomFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private UiUpdateInterface uiUpdateInterface;
+    private FloatingActionButton listFab;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public StorageRoomFragment() {
     }
 
@@ -48,6 +47,7 @@ public class StorageRoomFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -57,7 +57,7 @@ public class StorageRoomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_storageroom_list, container, false);
-
+        listFab = (FloatingActionButton) getActivity().findViewById(R.id.listviewFabBtn);
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -67,7 +67,34 @@ public class StorageRoomFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+
+
             recyclerView.setAdapter(new MyStorageRoomRecyclerViewAdapter(StorageRoom.ITEMS, mListener, getActivity()));
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    StorageRoom storageroom = StorageRoom.ITEMS.get(position);
+                    FragmentTransaction trans = getFragmentManager()
+                            .beginTransaction();
+
+                    StorageFragment storageFragment = new StorageFragment();
+                    trans.replace(R.id.root_frame, storageFragment);
+
+                    trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    trans.addToBackStack(null);
+
+                    trans.commit();
+                    storageFragment.setStorage(storageroom);
+                    uiUpdateInterface.showStorageRoom();
+
+                    listFab.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+                }
+            }));
+
         }
         return view;
     }
@@ -82,6 +109,12 @@ public class StorageRoomFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+        try {
+            uiUpdateInterface = (UiUpdateInterface) context;
+        }catch (ClassCastException ex)
+        {
+            throw new ClassCastException(context.toString() + " must implement EventSelectorInterface");
+        }
     }
 
     @Override
@@ -90,16 +123,7 @@ public class StorageRoomFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(StorageRoom item);

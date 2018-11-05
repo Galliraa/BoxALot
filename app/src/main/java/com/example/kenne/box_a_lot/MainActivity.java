@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
 
     @Override
     public void showStorageRoom() {
+
         updateFragmentViewState(UserMode.DETAILS_VIEW);
     }
 

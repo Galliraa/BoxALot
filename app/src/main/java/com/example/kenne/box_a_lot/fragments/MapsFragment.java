@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -58,15 +57,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-
 public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStartedListener,
         GoogleMap.OnCameraMoveListener,
         GoogleMap.OnCameraMoveCanceledListener,
         GoogleMap.OnCameraIdleListener,
         OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
-        StorageFragment.OnFragmentInteractionListener{
+        StorageFragment.OnFragmentInteractionListener {
 
+    String Trash = "Garbage";
     Map<String, StorageRoom> storageroomsOnMap = null;
     SupportMapFragment mapFragment;
     StorageRoom storageRoom = null;
@@ -288,26 +287,17 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
         StorageRoom storageroom = storageroomsOnMap.get(marker.getId());
         FragmentTransaction trans = getFragmentManager()
                 .beginTransaction();
-        /*
-         * IMPORTANT: We use the "root frame" defined in
-         * "root_fragment.xml" as the reference to replace fragment
-         */
+
         StorageFragment storageFragment = new StorageFragment();
         trans.replace(R.id.root_frame, storageFragment);
 
-        /*
-         * IMPORTANT: The following lines allow us to add the fragment
-         * to the stack and return to it later, by pressing back
-         */
         trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         trans.addToBackStack(null);
 
         trans.commit();
-        storageFragment.setStorage(storageRoom);
+        storageFragment.setStorage(storageroom);
         uiUpdateInterface.showStorageRoom();
-        /*CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) listFab.getLayoutParams();
-        p.setAnchorId(View.NO_ID);
-        listFab.setLayoutParams(p);*/
+
         listFab.setVisibility(View.GONE);
 
     }

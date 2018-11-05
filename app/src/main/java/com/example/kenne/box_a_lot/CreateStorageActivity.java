@@ -65,7 +65,7 @@ public class CreateStorageActivity extends AppCompatActivity {
         cityET = findViewById(R.id.cityET);
         addressET = findViewById(R.id.addressET);
         priceET = findViewById(R.id.priceET);
-        storageIV = findViewById(R.id.storageIV);
+        storageIV = findViewById(R.id.ph00);
         submitBtn = findViewById(R.id.submitStorageBtn);
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
