@@ -35,7 +35,7 @@ public class LoginActivity   extends AppCompatActivity {
 
         final TextView emailEditText = (EditText) findViewById(R.id.login_Email_ET);
         final TextView passwordEditText = (EditText) findViewById(R.id.login_Password_ET);
-        //Button loginButton = (Button) findViewById(R.id.loginButton);
+        Button loginButton = (Button) findViewById(R.id.login_Btn);
         Button registerButton = (Button) findViewById(R.id.login_register_Btn);
 
 // Getting the firebase reference url
