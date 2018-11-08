@@ -49,25 +49,6 @@ public class StorageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       /* TextView priceTV = getView().findViewById(R.id.priceTvStorageFrag);
-        priceTV.setText(getArguments().getString("price"));
-        TextView addressTV = getView().findViewById(R.id.addressTvStorageFrag);
-        addressTV.setText(getArguments().getString("address"));
-        Button contactLandlordBtn = getView().findViewById(R.id.contactLandlordBtnStorageFrag);
-        stId = getArguments().getString("storageroomID");
-        contactLandlordBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StorageFragment.this.getActivity(), ContactStorage.class);
-                intent.putExtra("storageRoomId", stId);
-                startActivity(intent);
-            }
-        });
-            //storageFragBundle.getArguments().getString("available");
-            //storageFragBundle.getArguments().getString("generalInfo");
-            //storageFragBundle.getArguments().getString("userId");
-            //storageFragBundle.getArguments().getString("storageroomID");
-            //storageFragBundle.getArguments().getString("imagePath");*/
 
         TextView priceTV = getView().findViewById(R.id.priceTvStorageFrag);
         priceTV.setText(prvStorageRoom.getPrice());
@@ -92,17 +73,6 @@ public class StorageFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-/*
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
 
     @Override
     public void onDetach() {
@@ -128,21 +98,6 @@ public class StorageFragment extends Fragment {
     public void setStorage(StorageRoom storageRoom)
     {
         prvStorageRoom = storageRoom;
-        /*
-        TextView priceTV = getView().findViewById(R.id.priceTvStorageFrag);
-        priceTV.setText(storageRoom.getPrice());
-        TextView addressTV = getView().findViewById(R.id.addressTvStorageFrag);
-        addressTV.setText(storageRoom.getAddress());
-        Button contactLandlordBtn = getView().findViewById(R.id.contactLandlordBtnStorageFrag);
-        stId = storageRoom.getStorageRoomId();
-        contactLandlordBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StorageFragment.this.getActivity(), ContactStorage.class);
-                intent.putExtra("storageRoomId", stId);
-                startActivity(intent);
-            }
-        });
-        */
+
     }
 }
