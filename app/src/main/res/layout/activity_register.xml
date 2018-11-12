@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -22,7 +22,32 @@
         android:textSize="40dp"
         android:textStyle="bold" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        >
 
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_person_black_24dp"/>
+
+
+        <EditText
+            android:id="@+id/register_Fullname_ET"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:hint="Full name"
+            android:textSize="@dimen/register_sizeText"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
 
 
     <LinearLayout
@@ -30,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp">
+        android:layout_marginLeft="10dp">
 
 
         <ImageView
@@ -40,11 +65,38 @@
 
 
         <EditText
-            android:id="@+id/login_Email_ET"
+            android:id="@+id/register_Email_ET"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:hint="Email"
+            android:textSize="@dimen/register_sizeText"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_local_phone_black1_24dp"
+            />
+
+
+        <EditText
+            android:id="@+id/register_PhonoNumber_ET"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:hint="Phono number"
             android:textSize="@dimen/register_sizeText"
             android:textStyle="bold" />
 
@@ -58,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp">
+        android:layout_marginLeft="10dp">
 
 
         <ImageView
@@ -69,7 +121,7 @@
 
 
         <EditText
-            android:id="@+id/login_Password_ET"
+            android:id="@+id/register_Password_ET"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
@@ -82,16 +134,8 @@
 
 
     <Button
-        android:id="@+id/login_Btn"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Login"
-        android:textSize="@dimen/register_sizeText"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/register_Btn"
+        android:id="@+id/login_register_Btn"
+        style="@android:style/Widget.Material.Button"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

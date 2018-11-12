@@ -1,4 +1,4 @@
-package com.example.kenne.box_a_lot;
+package com.example.kenne.box_a_lot.models;
 
 
 public class User {
