@@ -25,7 +25,8 @@
     <string name="userTitle">User</string>
     <string name="storagefragment_marker_transition">storageFragMarkerTransition</string>
     <string name="title_activity_deletethis">deletethis</string>
-    <string name="input_room_price">Hvad er pisen pr kvm?</string>
+    <string name="input_room_size">Hvor mange kvadratmeter er depotrummet?</string>
+    <string name="input_room_price">Hvad er pisen på depotrummet?</string>
     <string name="input_room_country">Hvilket land befinder rummet sig i?</string>
     <string name="input_room_desc">Giv en kort beskrivelse af rummet</string>
 </resources>

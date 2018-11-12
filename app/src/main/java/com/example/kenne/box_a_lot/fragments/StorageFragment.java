@@ -1,24 +1,23 @@
 package com.example.kenne.box_a_lot.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.kenne.box_a_lot.ContactStorage;
 import com.example.kenne.box_a_lot.R;
+import com.example.kenne.box_a_lot.adapters.CustomStorageroomVPAdapter;
 import com.example.kenne.box_a_lot.models.StorageRoom;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
 public class StorageFragment extends Fragment {
@@ -50,10 +49,17 @@ public class StorageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ViewPager imageViewPager = getView().findViewById(R.id.storageroomDetailsViewPager);
+        CustomStorageroomVPAdapter viewPagerAdapter = new CustomStorageroomVPAdapter(getContext(), prvStorageRoom.getPicRef());
+        imageViewPager.setAdapter(viewPagerAdapter);
         TextView priceTV = getView().findViewById(R.id.priceTvStorageFrag);
         priceTV.setText(prvStorageRoom.getPrice());
         TextView addressTV = getView().findViewById(R.id.addressTvStorageFrag);
-        addressTV.setText(prvStorageRoom.getAddress());
+        addressTV.setText(prvStorageRoom.getAddress().get(3) + " " + prvStorageRoom.getAddress().get(4));
+        TextView descTV = getView().findViewById(R.id.descTvStorageFrag);
+        descTV.setText(prvStorageRoom.getDesc());
+        TextView sizeTV = getView().findViewById(R.id.sizeTvStorageFrag);
+        sizeTV.setText(prvStorageRoom.getSize());
         Button contactLandlordBtn = getView().findViewById(R.id.contactLandlordBtnStorageFrag);
         stId = prvStorageRoom.getStorageRoomId();
         contactLandlordBtn.setOnClickListener(new View.OnClickListener() {

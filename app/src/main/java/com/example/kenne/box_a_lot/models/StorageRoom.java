@@ -23,28 +23,18 @@ public class StorageRoom {
     }
 
     public void setStorageMap(DocumentSnapshot  document) {
-        //this.setCoordinates((List<Double>) document.get("location"));
         this.setStorageRoomId(document.getId());
         this.setGeneralInfo((List<Boolean>) document.get("generalInfo"));
         this.setAvailable((Boolean) document.get("available"));
         this.setPrice((String) document.get("price"));
         this.setPicRef(((ArrayList<String>)document.get("picRef")));
         this.setChatIds((List<Integer>) document.get("chatIds"));
-        this.setAddress((String) document.get("address"));
+        this.setAddress((List) document.get("address"));
         this.setUserId((FirebaseUser) document.get("userId"));
+        this.setDesc((String) document.get("desc"));
+        this.setSize((String) document.get("size"));
     }
 
-    /*    int storageRoomID;
-            List<Double> coordinates;
-
-            int userID;
-            String address;
-            String price;
-            Boolean available;
-            int picRef;
-            List<Boolean> generalInfo;
-            List<Integer> chatIds;
-        */
     public String getStorageRoomId() {
         return (String) StorageMap.get("storageRoomId");
     }
@@ -69,11 +59,11 @@ public class StorageRoom {
         this.StorageMap.put("userId", userId);
     }
 
-    public String getAddress() {
-        return (String) StorageMap.get("address");
+    public List<String> getAddress() {
+        return (List<String>) StorageMap.get("address");
     }
 
-    public void setAddress(String address) {
+    public void setAddress(List address) {
         this.StorageMap.put("address", address);
     }
 
@@ -115,5 +105,17 @@ public class StorageRoom {
 
     public void setChatIds(List<Integer> chatIds) {
         this.StorageMap.put("chatIds", chatIds);
+    }
+
+    public String getDesc(){return  (String) StorageMap.get("desc");}
+
+    public void setDesc(String desc) {
+        this.StorageMap.put("desc", desc);
+    }
+
+    public String getSize(){return  (String) StorageMap.get("size");}
+
+    public void setSize(String size) {
+        this.StorageMap.put("size", size);
     }
 }

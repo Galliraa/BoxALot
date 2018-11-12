@@ -36,6 +36,14 @@
             android:maxLines="1" />
 
         <EditText
+            android:id="@+id/sizeET"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_room_size"
+            android:maxLines="1" />
+
+        <EditText
             android:id="@+id/priceET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

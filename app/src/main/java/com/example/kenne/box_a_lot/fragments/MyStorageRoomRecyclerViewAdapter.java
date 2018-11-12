@@ -54,37 +54,25 @@ public class MyStorageRoomRecyclerViewAdapter extends RecyclerView.Adapter<MySto
     public void onBindViewHolder(final MyStorageRoomRecyclerViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.mPriceTV.setText(mValues.get(position).getPrice());
-        holder.mAddressTV.setText(mValues.get(position).getAddress());
-        holder.mDescriptionTV.setText(mValues.get(position).getPrice());
+        holder.mAddressTV.setText(mValues.get(position).getAddress().get(3) + " " + mValues.get(position).getAddress().get(4));
+        holder.mDescriptionTV.setText(mValues.get(position).getDesc());
 
         String picRef = mValues.get(position).getPicRef().get(0);
 
         if(picRef != null) {
-            StorageReference storageRef = FBstorage.getReference().child(picRef);
 
+        // Got the download URL
+        // Pass it to Picasso to download, show in ImageView and caching
+        Picasso.with(context).load(picRef).fit().centerCrop().into(holder.mStoragePic, new Callback() {
+            @Override
+            public void onSuccess() {
 
-            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    // Got the download URL
-                    // Pass it to Picasso to download, show in ImageView and caching
-                    Picasso.with(context).load(uri.toString()).fit().centerCrop().into(holder.mStoragePic, new Callback() {
-                        @Override
-                        public void onSuccess() {
+            }
 
-                        }
-
-                        @Override
-                        public void onError() {
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
+            @Override
+            public void onError() {
+            }
+        });
         }
     }
 

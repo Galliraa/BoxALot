@@ -2,6 +2,8 @@ package com.example.kenne.box_a_lot;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.imperiumlabs.geofirestore.GeoFirestore;
 
@@ -48,10 +51,16 @@ public class CreateStorageActivity extends AppCompatActivity {
     private EditText cityET;
     private EditText addressET;
     private EditText priceET;
+    private EditText descET;
+    private EditText sizeET;
     private Button submitBtn;
     private StorageRoom storageRoom = new StorageRoom();
     private ImageView[] myImageViewArray = new ImageView[MAX_PIC_NUMBER];
     private CheckBox[]  myCheckBoxArray = new CheckBox[9];
+    private int counter = 0;
+    List<Double> locationAddress = new ArrayList<>();
+    List<Boolean> generalInfo = new ArrayList<>();
+    List<String> addressStrings = new ArrayList<>();
 
     private static final int SIGN_IN_REQUEST_CODE = 1;
     private static final int[] PHOTO_CAPTURE_REQUEST_CODE = new int[]{2,3,4,5};
@@ -68,6 +77,8 @@ public class CreateStorageActivity extends AppCompatActivity {
         cityET = findViewById(R.id.cityET);
         addressET = findViewById(R.id.addressET);
         priceET = findViewById(R.id.priceET);
+        descET = findViewById(R.id.descET);
+        sizeET = findViewById(R.id.sizeET);
         myImageViewArray[0] = findViewById(R.id.ph00);
         myImageViewArray[1] = findViewById(R.id.ph01);
         myImageViewArray[2] = findViewById(R.id.ph02);
@@ -157,8 +168,7 @@ public class CreateStorageActivity extends AppCompatActivity {
     private class GeocoderHandler extends Handler {
         @Override
         public void handleMessage(Message message) {
-            List<Double> locationAddress = new ArrayList<>();
-            List<Boolean> generalInfo = new ArrayList<>();
+
             for(int i = 0; i < MAX_CHECK_NUMBER; i++)
                 generalInfo.add(myCheckBoxArray[i].isChecked());
 
@@ -168,17 +178,24 @@ public class CreateStorageActivity extends AppCompatActivity {
                     locationAddress.add(bundle.getDoubleArray("LatLng")[0]);
                     locationAddress.add(bundle.getDoubleArray("LatLng")[1]);
 
+                    String[] tempAddressStrings = new String[5];
+                    tempAddressStrings = bundle.getStringArray("address");
+                    for(int i = 0; i < tempAddressStrings.length; i++)
+                    {
+                        addressStrings.add(tempAddressStrings[i]);
+                    }
                     break;
                 default:
                     locationAddress = null;
             }
 
-            List<String> picrefs = new ArrayList<String>();
+            final List<String> picrefs = new ArrayList<String>();
             // Create a new user with a first and last name
             if(locationAddress!=null) {
+            Drawable.ConstantState defaultPic = getResources().getDrawable(R.drawable.add_icon).getConstantState();
                 for(int i = 0; i < MAX_PIC_NUMBER; i++) {
-                    if(myImageViewArray[i].getId() != R.id.storageContainer) {
-                        String path = FirebaseAuth.getInstance()
+                    if(myImageViewArray[i].getDrawable().getConstantState() != defaultPic) {
+                        final String path = FirebaseAuth.getInstance()
                                 .getCurrentUser().getUid() + "/" + UUID.randomUUID() + ".PNG";
                         myImageViewArray[i].setDrawingCacheEnabled(true);
                         Bitmap bitmap = myImageViewArray[i].getDrawingCache();
@@ -187,55 +204,73 @@ public class CreateStorageActivity extends AppCompatActivity {
                         resized.compress(Bitmap.CompressFormat.PNG, 0, baos);
                         byte[] data = baos.toByteArray();
 
-                        StorageReference firePicRef = FBstorage.getReference(path);
-                        firePicRef.putBytes(data);
-                        picrefs.add(path);
-                    }
-                }
-
-                storageRoom.setPicRef(picrefs);
-                storageRoom.setCoordinates(locationAddress);
-                storageRoom.setAddress(countryET.getText().toString() + " , " + cityET.getText().toString() + " , " + addressET.getText().toString());
-                storageRoom.setUserId(currentUser);
-                storageRoom.setPrice(priceET.getText().toString());
-                storageRoom.setAvailable(true);
-                //storageRoom.setPicRef(R.drawable.garage_depot);
-                storageRoom.setGeneralInfo(generalInfo);
-                storageRoom.setChatIds(null);
-
-                final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                        .setTimestampsInSnapshotsEnabled(true)
-                        .build();
-                db.setFirestoreSettings(settings);
-
-                // Add a new document with a generated ID
-                db.collection("StorageRooms")
-                        .add(storageRoom.getStorageMap())
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        final StorageReference firePicRef = FBstorage.getReference(path);
+                        counter++;
+                        firePicRef.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                CollectionReference geoFirestoreRef = db.collection("StorageRooms");
-                                GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
-
-                                geoFirestore = new GeoFirestore(db.collection("GeoFire"));
-                                geoFirestore.setLocation(documentReference.getId(), new GeoPoint(storageRoom.getCoordinates().get(0),storageRoom.getCoordinates().get(1)), new GeoFirestore.CompletionListener() {
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                firePicRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
-                                    public void onComplete(Exception exception) {
-                                        if (exception == null){
-                                            System.out.println("Location saved on server successfully!");
+                                    public void onSuccess(Uri uri) {
+                                        counter--;
+                                        //Do what you want with the url
+                                        picrefs.add(uri.toString());
+                                        if(counter == 0)
+                                        {
+                                            storageRoom.setPicRef(picrefs);
+                                            storageRoom.setCoordinates(locationAddress);
+                                            storageRoom.setAddress(addressStrings);
+                                            storageRoom.setUserId(currentUser);
+                                            storageRoom.setPrice(priceET.getText().toString());
+                                            storageRoom.setAvailable(true);
+                                            storageRoom.setGeneralInfo(generalInfo);
+                                            storageRoom.setChatIds(null);
+                                            storageRoom.setDesc(descET.getText().toString());
+                                            storageRoom.setSize(sizeET.getText().toString());
+
+                                            final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                                                    .setTimestampsInSnapshotsEnabled(true)
+                                                    .build();
+                                            db.setFirestoreSettings(settings);
+
+                                            // Add a new document with a generated ID
+                                            db.collection("StorageRooms")
+                                                    .add(storageRoom.getStorageMap())
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference) {
+                                                            CollectionReference geoFirestoreRef = db.collection("StorageRooms");
+                                                            GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
+
+                                                            geoFirestore = new GeoFirestore(db.collection("GeoFire"));
+                                                            geoFirestore.setLocation(documentReference.getId(), new GeoPoint(storageRoom.getCoordinates().get(0),storageRoom.getCoordinates().get(1)), new GeoFirestore.CompletionListener() {
+                                                                @Override
+                                                                public void onComplete(Exception exception) {
+                                                                    if (exception == null){
+                                                                        System.out.println("Location saved on server successfully!");
+
+                                                                    }
+                                                                }
+                                                            });
+                                                            //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            //Log.w(TAG, "Error adding document", e);
+                                                        }
+                                                    });
                                         }
                                     }
                                 });
-                                //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                //Log.w(TAG, "Error adding document", e);
                             }
                         });
+                    }
+                }
+
+
 
 
             }
@@ -248,6 +283,7 @@ public class CreateStorageActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 GeocodingLocation locationAddress = new GeocodingLocation();
+
                 locationAddress.getAddressFromLocation(countryET.getText().toString() + " , "
                                 + cityET.getText().toString() + " , "
                                 + addressET.getText().toString(),

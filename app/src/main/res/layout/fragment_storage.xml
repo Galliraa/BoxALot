@@ -9,8 +9,8 @@
     android:orientation="vertical"
     android:background="@drawable/white_border">
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/storageroomDetailsViewPager"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_alignParentTop="true"
@@ -37,6 +37,14 @@
 
     <TextView
         android:id="@+id/sizeTvStorageFrag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:maxLines="1"
+        android:text="TextView" />
+    <TextView
+        android:id="@+id/descTvStorageFrag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView2"
