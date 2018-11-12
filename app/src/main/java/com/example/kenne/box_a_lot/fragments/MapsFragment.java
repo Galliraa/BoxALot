@@ -55,6 +55,7 @@ import org.imperiumlabs.geofirestore.GeoQueryEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStartedListener,
@@ -65,16 +66,15 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
         GoogleMap.OnInfoWindowClickListener,
         StorageFragment.OnFragmentInteractionListener {
 
-    String Trash = "Garbage";
-    Map<String, StorageRoom> storageroomsOnMap = null;
-    SupportMapFragment mapFragment;
-    StorageRoom storageRoom = null;
+    private SupportMapFragment mapFragment;
+    private StorageRoom storageRoom = null;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private FragmentActivity myContext;
     private UiUpdateInterface uiUpdateInterface;
     private PlaceAutocompleteFragment placeAutoComplete;
     private FloatingActionButton listFab;
+    private List<MarkerOptions> markerArray = new ArrayList<>();
 
     public MapsFragment() {
         // Required empty public constructor
@@ -101,11 +101,94 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
         mapFragment.getMapAsync(this);
 
         listFab = (FloatingActionButton) getActivity().findViewById(R.id.listviewFabBtn);
-        placeAutoComplete = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete);
+       /* placeAutoComplete = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 10));
+                StorageRoom.ITEMS.clear();
+                markerArray = new ArrayList<>();
+                mMap.clear();
+                //storage
+                LatLng searchLocation = place.getLatLng();
+
+                double radius = 10;//111.19*(searchLocation.northeast.latitude - searchLocation.getCenter().latitude);
+
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                        .setTimestampsInSnapshotsEnabled(true)
+                        .build();
+                db.setFirestoreSettings(settings);
+
+                CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("GeoFire");
+                GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
+
+                GeoPoint geoPoint = new GeoPoint(searchLocation.latitude, searchLocation.longitude);
+                // creates a new query around map coordinate with a radius of center to maps top
+                GeoQuery geoQuery = geoFirestore.queryAtLocation(geoPoint, radius);
+
+                geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+                    @Override
+                    public void onKeyEntered(final String documentID, final GeoPoint location) {
+                        DocumentReference docRef = db.collection("StorageRooms").document(documentID);
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+
+                                        storageRoom = new StorageRoom();
+                                        storageRoom.setStorageMap(document);
+                                        String picRef = null;
+                                        if(storageRoom.getPicRef() != null)
+                                            picRef = storageRoom.getPicRef().get(0);
+
+                                        MarkerOptions marker = new MarkerOptions()
+                                                .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                                                .title(document.getString("price"))
+                                                .snippet(picRef)
+                                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+
+                                        mMap.addMarker(marker);
+                                        markerArray.add(marker);
+
+                                        StorageRoom.ITEMS.add(storageRoom);
+
+                                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    } else {
+                                        //Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    //Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+
+                        System.out.println(String.format("Document %s entered the search area at [%f,%f]", documentID, location.getLatitude(), location.getLongitude()));
+                    }
+
+                    @Override
+                    public void onKeyExited(String documentID) {
+                        System.out.println(String.format("Document %s is no longer in the search area", documentID));
+                    }
+
+                    @Override
+                    public void onKeyMoved(String documentID, GeoPoint location) {
+                        System.out.println(String.format("Document %s moved within the search area to [%f,%f]", documentID, location.getLatitude(), location.getLongitude()));
+                    }
+
+                    @Override
+                    public void onGeoQueryReady() {
+                        System.out.println("All initial data has been loaded and events have been fired!");
+                    }
+
+                    @Override
+                    public void onGeoQueryError(Exception exception) {
+                        System.err.println("There was an error with this query: " + exception.getLocalizedMessage());
+                    }
+                });
+
                 CameraUpdate location = CameraUpdateFactory.newLatLngZoom(
                         place.getLatLng(), 10);
                 mMap.animateCamera(location);
@@ -116,7 +199,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
             public void onError(Status status) {
                 Log.d("Maps", "An error occurred: " + status);
             }
-        });
+        });*/
 
         return v;
     }
@@ -124,8 +207,6 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        storageroomsOnMap = new HashMap<>();
-        StorageRoom.ITEMS = new ArrayList<>();
         mFusedLocationClient = new FusedLocationProviderClient(getActivity());
     }
 
@@ -138,6 +219,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
         mMap.setOnCameraMoveStartedListener(this);
         mMap.setOnCameraMoveListener(this);
         mMap.setOnCameraMoveCanceledListener(this);
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(getActivity()));
+        mMap.setOnInfoWindowClickListener(this);
 
 
         if ( ContextCompat.checkSelfPermission( getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
@@ -163,6 +246,10 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
                         }
                     });
 
+            if(!markerArray.isEmpty()){
+                for(int i  = 0; i < markerArray.size(); i++)
+                    mMap.addMarker(markerArray.get(i));
+            }
         }
 
 
@@ -171,100 +258,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
     @Override
     public void onCameraIdle() {
 
-        LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
-
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(getActivity()));
-
-        mMap.setOnInfoWindowClickListener(this);
-
-        double radius = 111.19*(bounds.northeast.latitude - bounds.getCenter().latitude);
-        //if(radius < 10) {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
-                .build();
-        db.setFirestoreSettings(settings);
-
-        CollectionReference geoFirestoreRef = FirebaseFirestore.getInstance().collection("GeoFire");
-        GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
-
-        GeoPoint geoPoint = new GeoPoint(bounds.getCenter().latitude, bounds.getCenter().longitude);
-        // creates a new query around map coordinate with a radius of center to maps top
-        GeoQuery geoQuery = geoFirestore.queryAtLocation(geoPoint, radius);
-
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(final String documentID, final GeoPoint location) {
-                DocumentReference docRef = db.collection("StorageRooms").document(documentID);
-                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-
-                                boolean setMarker = true;
-                                Iterator it = storageroomsOnMap.entrySet().iterator();
-                                while (it.hasNext()) {
-                                    Map.Entry pair = (Map.Entry)it.next();
-                                    if(((StorageRoom)pair.getValue()).getStorageRoomId().equals(document.getId()))
-                                        setMarker = false;
-                                }
-
-
-                                if(setMarker) {
-                                    storageRoom = new StorageRoom();
-                                    storageRoom.setStorageMap(document);
-                                    String picRef = null;
-                                    if(storageRoom.getPicRef() != null)
-                                        picRef = storageRoom.getPicRef().get(0);
-
-                                    MarkerOptions marker = new MarkerOptions()
-                                            .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                                            .title(document.getString("price"))
-                                            .snippet(picRef)
-                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-
-                                    String id = mMap.addMarker(marker).getId();
-                                    storageroomsOnMap.put(id, storageRoom);
-                                    StorageRoom.ITEMS.add(storageRoom);
-                                }
-                                //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                            } else {
-                                //Log.d(TAG, "No such document");
-                            }
-                        } else {
-                            //Log.d(TAG, "get failed with ", task.getException());
-                        }
-                    }
-                });
-
-                System.out.println(String.format("Document %s entered the search area at [%f,%f]", documentID, location.getLatitude(), location.getLongitude()));
-            }
-
-            @Override
-            public void onKeyExited(String documentID) {
-                System.out.println(String.format("Document %s is no longer in the search area", documentID));
-            }
-
-            @Override
-            public void onKeyMoved(String documentID, GeoPoint location) {
-                System.out.println(String.format("Document %s moved within the search area to [%f,%f]", documentID, location.getLatitude(), location.getLongitude()));
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-                System.out.println("All initial data has been loaded and events have been fired!");
-            }
-
-            @Override
-            public void onGeoQueryError(Exception exception) {
-                System.err.println("There was an error with this query: " + exception.getLocalizedMessage());
-            }
-        });
     }
-
-    //}
 
     @Override
     public void onCameraMoveCanceled() {
@@ -284,7 +278,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
     @Override
     public void onInfoWindowClick(Marker marker) {
 
-        StorageRoom storageroom = storageroomsOnMap.get(marker.getId());
+        StorageRoom storageroom = StorageRoom.ITEMS.get(Integer.parseInt(marker.getId().toString().replaceAll("\\D+","")));
         FragmentTransaction trans = getFragmentManager()
                 .beginTransaction();
 
@@ -317,5 +311,20 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
         {
             throw new ClassCastException(activity.toString() + " must implement EventSelectorInterface");
         }
+    }
+
+    public void selectionChanged(MarkerOptions marker){
+
+            mMap.addMarker(marker);
+    }
+
+    public void clearMap(){
+        mMap.clear();
+    }
+
+    public void restoreMap(List<MarkerOptions> markers)
+    {
+        for(int i = 0; i < markers.size(); i++)
+            mMap.addMarker(markers.get(i));
     }
 }

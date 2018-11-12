@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/input_room_price"
             android:maxLines="1" />
+
         <EditText
             android:id="@+id/descET"
             android:layout_width="match_parent"
@@ -113,31 +114,125 @@
 
             </GridLayout>
         </android.support.constraint.ConstraintLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-    <RadioGroup
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0.33">
 
-        <RadioButton
-            android:id="@+id/radioMale"
+        <CheckBox
+            android:id="@+id/checkElevator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Elevator" />
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Elevator"
+            android:layout_gravity="center"/>
 
-        <RadioButton
-            android:id="@+id/radioFemale"
+        <CheckBox
+            android:id="@+id/checkOwnEntrance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Egen adgang"
-            android:button="@drawable/acces_radio"/>
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Egen indgang"
+            android:layout_gravity="center"/>
 
-    </RadioGroup>
+        <CheckBox
+            android:id="@+id/checkOwnKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Egen nøgle"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0.33">
+
+        <CheckBox
+            android:id="@+id/checkParking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Elevator"
+            android:layout_gravity="center"/>
+
+        <CheckBox
+            android:id="@+id/checkShortNotice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Egen indgang"
+            android:layout_gravity="center"/>
+
+        <CheckBox
+            android:id="@+id/checkAllTimeAcces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Egen nøgle"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0.33">
+
+        <CheckBox
+            android:id="@+id/checkEasyAcces"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Elevator"
+            android:layout_gravity="center"/>
+
+        <CheckBox
+            android:id="@+id/checkSharedRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Egen indgang"
+            android:layout_gravity="center"/>
+
+        <CheckBox
+            android:id="@+id/checkOnlyAfterSix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableBottom="@android:drawable/btn_radio"
+            android:button="@null"
+            android:text="Egen nøgle"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
 
     <Button
             android:id="@+id/submitStorageBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Opret" />
+
 </LinearLayout>
     </ScrollView>
 

@@ -18,9 +18,12 @@ import com.example.kenne.box_a_lot.interfaces.ClickListener;
 import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
 import com.example.kenne.box_a_lot.models.StorageRoom;
 import com.example.kenne.box_a_lot.other.RecyclerTouchListener;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 
-public class StorageRoomFragment extends Fragment {
+public class StorageRoomFragment extends Fragment{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -29,6 +32,7 @@ public class StorageRoomFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private UiUpdateInterface uiUpdateInterface;
     private FloatingActionButton listFab;
+    RecyclerView recyclerView;
 
     public StorageRoomFragment() {
     }
@@ -61,7 +65,7 @@ public class StorageRoomFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -124,8 +128,14 @@ public class StorageRoomFragment extends Fragment {
     }
 
 
+
+
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(StorageRoom item);
+    }
+
+    public void SelectionChanged(){
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

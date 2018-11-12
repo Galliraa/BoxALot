@@ -2,16 +2,15 @@ package com.example.kenne.box_a_lot;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -40,18 +39,22 @@ import java.util.UUID;
 
 public class CreateStorageActivity extends AppCompatActivity {
 
+    private static final int MAX_PIC_NUMBER = 4;
+    private static final int MAX_CHECK_NUMBER = 9;
+
     private FirebaseStorage FBstorage = FirebaseStorage.getInstance();
 
     private EditText countryET;
     private EditText cityET;
     private EditText addressET;
     private EditText priceET;
-    private ImageView storageIV;
     private Button submitBtn;
     private StorageRoom storageRoom = new StorageRoom();
+    private ImageView[] myImageViewArray = new ImageView[MAX_PIC_NUMBER];
+    private CheckBox[]  myCheckBoxArray = new CheckBox[9];
 
     private static final int SIGN_IN_REQUEST_CODE = 1;
-    private static final int PHOTO_CAPTURE_REQUEST_CODE = 2;
+    private static final int[] PHOTO_CAPTURE_REQUEST_CODE = new int[]{2,3,4,5};
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -65,7 +68,20 @@ public class CreateStorageActivity extends AppCompatActivity {
         cityET = findViewById(R.id.cityET);
         addressET = findViewById(R.id.addressET);
         priceET = findViewById(R.id.priceET);
-        storageIV = findViewById(R.id.ph00);
+        myImageViewArray[0] = findViewById(R.id.ph00);
+        myImageViewArray[1] = findViewById(R.id.ph01);
+        myImageViewArray[2] = findViewById(R.id.ph02);
+        myImageViewArray[3] = findViewById(R.id.ph03);
+        myCheckBoxArray[0] = findViewById(R.id.checkAllTimeAcces);
+        myCheckBoxArray[1] = findViewById(R.id.checkEasyAcces);
+        myCheckBoxArray[2] = findViewById(R.id.checkElevator);
+        myCheckBoxArray[3] = findViewById(R.id.checkOnlyAfterSix);
+        myCheckBoxArray[4] = findViewById(R.id.checkOwnEntrance);
+        myCheckBoxArray[5] = findViewById(R.id.checkOwnKey);
+        myCheckBoxArray[6] = findViewById(R.id.checkParking);
+        myCheckBoxArray[7] = findViewById(R.id.checkSharedRoom);
+        myCheckBoxArray[8] = findViewById(R.id.checkShortNotice);
+
         submitBtn = findViewById(R.id.submitStorageBtn);
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -115,16 +131,18 @@ public class CreateStorageActivity extends AppCompatActivity {
                 finish();
             }
         }
-        if(requestCode == PHOTO_CAPTURE_REQUEST_CODE){
-            if(resultCode == RESULT_OK) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                storageIV.setImageBitmap(bitmap);
-            } else {
-                Toast.makeText(this,
-                        "The photo could not be retrieved",
-                        Toast.LENGTH_LONG)
-                        .show();
+        for(int i = 0; i < MAX_PIC_NUMBER; i++) {
+            if (requestCode == PHOTO_CAPTURE_REQUEST_CODE[i]) {
+                if (resultCode == RESULT_OK) {
+                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    myImageViewArray[i].setImageBitmap(bitmap);
+                } else {
+                    Toast.makeText(this,
+                            "The photo could not be retrieved",
+                            Toast.LENGTH_LONG)
+                            .show();
 
+                }
             }
         }
 
@@ -141,9 +159,9 @@ public class CreateStorageActivity extends AppCompatActivity {
         public void handleMessage(Message message) {
             List<Double> locationAddress = new ArrayList<>();
             List<Boolean> generalInfo = new ArrayList<>();
-            generalInfo.add(true);
-            generalInfo.add(false);
-            generalInfo.add(true);
+            for(int i = 0; i < MAX_CHECK_NUMBER; i++)
+                generalInfo.add(myCheckBoxArray[i].isChecked());
+
             switch (message.what) {
                 case 1:
                     Bundle bundle = message.getData();
@@ -154,27 +172,28 @@ public class CreateStorageActivity extends AppCompatActivity {
                 default:
                     locationAddress = null;
             }
+
+            List<String> picrefs = new ArrayList<String>();
             // Create a new user with a first and last name
             if(locationAddress!=null) {
+                for(int i = 0; i < MAX_PIC_NUMBER; i++) {
+                    if(myImageViewArray[i].getId() != R.id.storageContainer) {
+                        String path = FirebaseAuth.getInstance()
+                                .getCurrentUser().getUid() + "/" + UUID.randomUUID() + ".PNG";
+                        myImageViewArray[i].setDrawingCacheEnabled(true);
+                        Bitmap bitmap = myImageViewArray[i].getDrawingCache();
+                        Bitmap resized = getResizedBitmap(bitmap, 300);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        resized.compress(Bitmap.CompressFormat.PNG, 0, baos);
+                        byte[] data = baos.toByteArray();
 
+                        StorageReference firePicRef = FBstorage.getReference(path);
+                        firePicRef.putBytes(data);
+                        picrefs.add(path);
+                    }
+                }
 
-                String path = FirebaseAuth.getInstance()
-                        .getCurrentUser().getUid() + "/" + UUID.randomUUID() + ".PNG";
-                storageIV.setDrawingCacheEnabled(true);
-                Bitmap bitmap = storageIV.getDrawingCache();
-                Bitmap resized = getResizedBitmap(bitmap, 300);
-                //Bitmap resized = Bitmap.createScaledBitmap(bitmap, (int)(160*(getResources().getDisplayMetrics().density)), (int)(160*(getResources().getDisplayMetrics().density)), true);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                resized.compress(Bitmap.CompressFormat.PNG, 0, baos);
-
-                byte[] data = baos.toByteArray();
-
-                StorageReference firePicRef = FBstorage.getReference(path);
-                firePicRef.putBytes(data);
-                List<String> picrefs = new ArrayList<String>();
-                picrefs.add(path);
                 storageRoom.setPicRef(picrefs);
-
                 storageRoom.setCoordinates(locationAddress);
                 storageRoom.setAddress(countryET.getText().toString() + " , " + cityET.getText().toString() + " , " + addressET.getText().toString());
                 storageRoom.setUserId(currentUser);
@@ -240,13 +259,32 @@ public class CreateStorageActivity extends AppCompatActivity {
 
     private void setupImageClickListener() {
         mAuth = FirebaseAuth.getInstance();
-        storageIV.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
 
+        myImageViewArray[0].setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 Intent photoCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(photoCaptureIntent, PHOTO_CAPTURE_REQUEST_CODE);
+                startActivityForResult(photoCaptureIntent, PHOTO_CAPTURE_REQUEST_CODE[0]);
             }
         });
+        myImageViewArray[1].setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent photoCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(photoCaptureIntent, PHOTO_CAPTURE_REQUEST_CODE[1]);
+            }
+        });
+        myImageViewArray[2].setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent photoCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(photoCaptureIntent, PHOTO_CAPTURE_REQUEST_CODE[2]);
+            }
+        });
+        myImageViewArray[3].setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent photoCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(photoCaptureIntent, PHOTO_CAPTURE_REQUEST_CODE[3]);
+            }
+        });
+
 
     }
 
