@@ -36,6 +36,7 @@ import com.google.firebase.storage.UploadTask;
 import org.imperiumlabs.geofirestore.GeoFirestore;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -249,7 +250,9 @@ public class CreateStorageActivity extends AppCompatActivity {
                                                                 public void onComplete(Exception exception) {
                                                                     if (exception == null){
                                                                         System.out.println("Location saved on server successfully!");
-
+                                                                        Intent intent = new Intent(getApplicationContext(), StorageroomViewer.class);
+                                                                        intent.putExtra("storageroom", (Serializable) storageRoom.StorageMap);
+                                                                        startActivity(intent);
                                                                     }
                                                                 }
                                                             });

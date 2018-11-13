@@ -81,8 +81,8 @@ public class RegisterActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     user  = new User();
-                                    user.setName(inputFullName.getText());
-                                    user.setPhoneNumber(inputPhonenumber);
+                                    user.setName(inputFullName.getText().toString());
+                                    user.setPhoneNumber(inputPhonenumber.toString());
                                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                     finish();
                                 }
