@@ -29,4 +29,6 @@
     <string name="input_room_price">Hvad er pisen på depotrummet?</string>
     <string name="input_room_country">Hvilket land befinder rummet sig i?</string>
     <string name="input_room_desc">Giv en kort beskrivelse af rummet</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
 </resources>

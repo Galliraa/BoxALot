@@ -53,6 +53,29 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kenne.box_a_lot.Start" />
         </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".Start"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kenne.box_a_lot.Start" />
+        </activity>
+
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:parentActivityName=".Start"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.kenne.box_a_lot.Start" />
+        </activity>
+
         <activity
             android:name=".ContactStorage"
             android:label="@string/title_activity_contact_storage"

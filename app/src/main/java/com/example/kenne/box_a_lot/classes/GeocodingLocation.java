@@ -36,7 +36,7 @@ public class GeocodingLocation {
                         result[1] = address.getLongitude();
                         addressResult[0] = address.getCountryCode();
                         addressResult[1] = address.getPostalCode();
-                        addressResult[2] = address.getSubLocality();
+                        addressResult[2] = ((address.getSubLocality() == null) ? address.getLocality() : address.getSubLocality());
                         addressResult[3] = address.getThoroughfare();
                         addressResult[4] = address.getSubThoroughfare();
 

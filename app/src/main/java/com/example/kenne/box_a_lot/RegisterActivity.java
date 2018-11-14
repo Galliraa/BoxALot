@@ -33,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
 
-        btnSignUp = (Button) findViewById(R.id.register_Btn);
+        btnSignUp = (Button) findViewById(R.id.register_register_Btn);
         inputEmail = (EditText) findViewById(R.id.register_Email_ET);
         inputPassword = (EditText) findViewById(R.id.register_Password_ET);
         inputFullName = (EditText) findViewById(R.id.register_Fullname_ET);

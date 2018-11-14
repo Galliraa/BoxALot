@@ -58,10 +58,8 @@ public class ContactStorage extends AppCompatActivity {
 
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             // Start sign in/sign up activity
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .build(),
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent,
                     SIGN_IN_REQUEST_CODE
             );
         } else {
