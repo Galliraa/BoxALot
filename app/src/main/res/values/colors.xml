@@ -8,6 +8,7 @@
     <color name="colorAccent">#D81B60</color>
     <color name="text_color">#fff</color>
     <color name="Black">#FF000000</color>
+    <color name="colorOverlay">#78ffffff</color>
 
 
     <array name="placeTypes">

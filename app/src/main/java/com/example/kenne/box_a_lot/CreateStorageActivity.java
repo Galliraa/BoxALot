@@ -2,6 +2,7 @@ package com.example.kenne.box_a_lot;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.kenne.box_a_lot.classes.GeocodingLocation;
 import com.example.kenne.box_a_lot.models.StorageRoom;
+import com.example.kenne.box_a_lot.other.ViewDialog;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,7 +50,7 @@ public class CreateStorageActivity extends AppCompatActivity {
     private static final int MAX_CHECK_NUMBER = 9;
 
     private FirebaseStorage FBstorage = FirebaseStorage.getInstance();
-
+    private ViewDialog viewDialog;
     private EditText countryET;
     private EditText cityET;
     private EditText addressET;
@@ -55,6 +58,7 @@ public class CreateStorageActivity extends AppCompatActivity {
     private EditText descET;
     private EditText sizeET;
     private Button submitBtn;
+
     private StorageRoom storageRoom = new StorageRoom();
     private ImageView[] myImageViewArray = new ImageView[MAX_PIC_NUMBER];
     private CheckBox[]  myCheckBoxArray = new CheckBox[9];
@@ -73,6 +77,8 @@ public class CreateStorageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_storage);
+
+        viewDialog = new ViewDialog(this);
 
         countryET = findViewById(R.id.countryET);
         cityET = findViewById(R.id.cityET);
@@ -249,9 +255,11 @@ public class CreateStorageActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onComplete(Exception exception) {
                                                                     if (exception == null){
+                                                                        viewDialog.hideDialog();
                                                                         System.out.println("Location saved on server successfully!");
                                                                         Intent intent = new Intent(getApplicationContext(), StorageroomViewer.class);
                                                                         intent.putExtra("storageroom", (Serializable) storageRoom.StorageMap);
+                                                                        CreateStorageActivity.this.finish();
                                                                         startActivity(intent);
                                                                     }
                                                                 }
@@ -286,6 +294,8 @@ public class CreateStorageActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 GeocodingLocation locationAddress = new GeocodingLocation();
+
+                viewDialog.showDialog();
 
                 locationAddress.getAddressFromLocation(countryET.getText().toString() + " , "
                                 + cityET.getText().toString() + " , "
