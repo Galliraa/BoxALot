@@ -77,14 +77,14 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
                         case 1:
                             if (mFirebaseUser == null) {
                                 // Not signed in, launch the Sign In activity
-                                ((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
+                                //((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
 
                             }
                             break;
                         case 2:
                             if (mFirebaseUser == null) {
                                 // Not signed in, launch the Sign In activity
-                                ((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
+                                //((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
                             }
                             break;
                         case 3:

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.kenne.box_a_lot.R;
 import com.example.kenne.box_a_lot.interfaces.ChangeFragmentInterface;
 import com.example.kenne.box_a_lot.models.StorageRoom;
 import com.google.android.gms.common.api.Status;
