@@ -1,21 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gbackground"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    >
 
-
-
-
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-    </fragment>
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_weight="0.5">
+
+        <fragment
+            android:id="@+id/fragment_creat_room_page3_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="20dp">
+
+        </fragment>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0.5">
+
+        <EditText
+            android:id="@+id/fragment_creat_room_page3_EditText_adress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:hint="Adresse"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/fragment_creat_room_page3_EditText_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:hint="By"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/fragment_creat_room_page3_EditText_postcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:hint="Postnummer"
+            android:inputType="number"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
 
 </LinearLayout>
