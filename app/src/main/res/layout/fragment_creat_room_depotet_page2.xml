@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,7 +18,6 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,18 +28,157 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:inputType="textMultiLine"
-        android:lines="10"
         android:gravity="top"
         android:hint="Beskrivelse"
+        android:inputType="textMultiLine"
+        android:lines="10"
         android:maxLines="15"
         android:selectAllOnFocus="false"
         android:singleLine="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_horizontal|center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText5">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_elevator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="Elevator"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_smokealarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="Røgalarm"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_private_entrance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:checked="false"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="Privat indgang"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_video_survallence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="Video overvågning"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_locked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="Aflåst"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_on_house_animels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:checked="false"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="Ingen husdyr"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.33"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_clima_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:checked="false"
+                android:clickable="false"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="Klima anlæg"
+                android:textColorHighlight="@android:color/black"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_no_smoke"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:checked="false"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="Røgfri"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/fragment_creat_room_page2_checkbox_24_7_access"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:checked="false"
+                android:drawableBottom="@android:drawable/btn_radio"
+                android:text="24 adgang"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 
 </android.support.constraint.ConstraintLayout>
+

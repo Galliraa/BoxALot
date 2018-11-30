@@ -33,9 +33,6 @@ public class CreateStoragePage2Fragment extends Fragment {
         return inflater.inflate(R.layout.fragment_creat_room_depotet_page2, container, false);
     }
 
-    // Html.fromHtml(htmlString)
-    String htmlString = "<u>This text will be underlined</u>";
-        tvfromHtmlDemo.setText(Html.fromHtml(htmlString));
 
 
 }
