@@ -12,6 +12,8 @@ import android.text.style.ImageSpan;
 import android.view.ViewGroup;
 
 import com.example.kenne.box_a_lot.R;
+import com.example.kenne.box_a_lot.fragments.CreateStoragePage1Fragment;
+import com.example.kenne.box_a_lot.fragments.CreateStoragePage2Fragment;
 import com.example.kenne.box_a_lot.fragments.MapsFragment;
 import com.example.kenne.box_a_lot.fragments.MapsRootFragment;
 import com.example.kenne.box_a_lot.fragments.UserFragment;
@@ -77,9 +79,9 @@ public class PageAdapter extends FragmentPagerAdapter {
             case 0: // Fragment # 0 - This will show FirstFragment
                 return new MapsRootFragment();
             case 1: // Fragment # 0 - This will show FirstFragment different title
-                return new UserFragment();
+                return new CreateStoragePage2Fragment();
             case 2: // Fragment # 0 - This will show FirstFragment different title
-                return new UserFragment();
+                return new CreateStoragePage1Fragment();
             case 3: // Fragment # 0 - This will show FirstFragment different title
                 return new UserFragment();
             default:

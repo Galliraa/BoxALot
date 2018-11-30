@@ -31,4 +31,19 @@
     <string name="input_room_desc">Giv en kort beskrivelse af rummet</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
+
+
+
+    <string-array name="type_deport_array">
+        <item>Værelse</item>
+        <item>kælderrum</item>
+        <item>Opbevarnigsrum</item>
+        <item>Skur</item>
+        <item>Garage</item>
+        <item>Loftrum</item>
+    </string-array>
+
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
 </resources>
