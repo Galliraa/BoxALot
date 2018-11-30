@@ -1,46 +1,70 @@
 package com.example.kenne.box_a_lot.models;
 
-import java.util.Date;
-
 public class ChatMessage {
 
-    private String messageText;
-    private String messageUser;
-    private long messageTime;
+    private String id;
+    private String text;
+    private String name;
+    private String photoUrl;
+    private String imageUrl;
+    private String uid;
 
-    public ChatMessage(){
-
+    public ChatMessage() {
     }
 
-    public ChatMessage(String messageText, String messageUser) {
-        this.messageText = messageText;
-        this.messageUser = messageUser;
-
-        // Initialize to current time
-        messageTime = new Date().getTime();
+    public ChatMessage(String text, String name, String photoUrl, String imageUrl, String uid) {
+        this.text = text;
+        this.name = name;
+        this.photoUrl = photoUrl;
+        this.imageUrl = imageUrl;
+        this.uid = uid;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public String getId() {
+        return id;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getMessageUser() {
-        return messageUser;
+    public String getText() {
+        return text;
     }
 
-    public void setMessageUser(String messageUser) {
-        this.messageUser = messageUser;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public long getMessageTime() {
-        return messageTime;
+    public String getName() {
+        return name;
     }
 
-    public void setMessageTime(long messageTime) {
-        this.messageTime = messageTime;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

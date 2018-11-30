@@ -2,16 +2,12 @@ package com.example.kenne.box_a_lot;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,7 +18,6 @@ import android.widget.Toast;
 import com.example.kenne.box_a_lot.classes.GeocodingLocation;
 import com.example.kenne.box_a_lot.models.StorageRoom;
 import com.example.kenne.box_a_lot.other.ViewDialog;
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +38,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateStorageActivity extends AppCompatActivity {
 
@@ -67,7 +65,7 @@ public class CreateStorageActivity extends AppCompatActivity {
     List<Boolean> generalInfo = new ArrayList<>();
     List<String> addressStrings = new ArrayList<>();
 
-    private static final int SIGN_IN_REQUEST_CODE = 1;
+    private static final int LOGIN_REQUEST = 1;
     private static final int[] PHOTO_CAPTURE_REQUEST_CODE = new int[]{2,3,4,5};
 
     private FirebaseAuth mAuth;
@@ -102,14 +100,11 @@ public class CreateStorageActivity extends AppCompatActivity {
 
         submitBtn = findViewById(R.id.submitStorageBtn);
 
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
-            // Start sign in/sign up activity
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .build(),
-                    SIGN_IN_REQUEST_CODE
-            );
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            // Not signed in, launch the Sign In activity
+            startActivityForResult(new Intent(this, LoginActivity.class),LOGIN_REQUEST);
+
+            return;
         } else {
             // User is already signed in. Therefore, display
             // a welcome Toast
@@ -131,7 +126,7 @@ public class CreateStorageActivity extends AppCompatActivity {
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == SIGN_IN_REQUEST_CODE) {
+        if(requestCode == LOGIN_REQUEST) {
             if(resultCode == RESULT_OK) {
                 Toast.makeText(this,
                         "Successfully signed in. Welcome!",

@@ -38,12 +38,13 @@
                         android:background="@drawable/gbackground"
                         android:orientation="vertical">
 
-                        <com.example.kenne.box_a_lot.customViews.RoundedImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:layout_width="200dp"
                             android:layout_height="200dp"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="35dp"
-                            android:src="@drawable/no_profile_pic" />
+                            android:src="@drawable/no_profile_pic"
+                            android:id="@+id/user_userIV"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -53,12 +54,13 @@
                             android:text="Mads Bygballe"
                             android:textColor="@color/text_color"
                             android:textSize="21sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:id="@+id/user_usernameTV"/>
 
                     </LinearLayout>
 
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="380dp"
                         android:layout_height="1200dp"
                         android:layout_centerHorizontal="true"
@@ -92,7 +94,8 @@
                                     android:text="25"
                                     android:textColor="@color/starblue"
                                     android:textSize="20sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:id="@+id/user_recommendationsTV"/>
 
                             </LinearLayout>
 
@@ -117,7 +120,8 @@
                                     android:text="2"
                                     android:textColor="@color/starblue"
                                     android:textSize="20sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:id="@+id/user_roomNumbersTV"/>
 
                             </LinearLayout>
 
@@ -142,14 +146,15 @@
                                     android:text="40"
                                     android:textColor="@color/starblue"
                                     android:textSize="20sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:id="@+id/user_rentalNumbersTV"/>
                             </LinearLayout>
 
 
                         </LinearLayout>
 
 
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
                 </RelativeLayout>
 
@@ -178,7 +183,8 @@
                             android:paddingLeft="20dp"
                             android:text="BygballeMads@gmail.com"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:id="@+id/user_userEmailTV"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -199,7 +205,8 @@
                             android:paddingLeft="20dp"
                             android:text="40 14 54 75"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:id="@+id/user_phonenumberTV"/>
 
                     </LinearLayout>
 
@@ -221,19 +228,25 @@
                             android:paddingLeft="20dp"
                             android:text="Spangevej 3 8700 Horsens"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:id="@+id/user_userAddressTV"/>
 
 
                     </LinearLayout>
 
 
                 </LinearLayout>
-
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_out"
+                    android:id="@+id/user_signOutBtn"/>
             </LinearLayout>
+
 
         </ScrollView>
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -247,11 +260,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:rippleColor="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_edit_black_24dp" />
-
-
-
-
-
 
     </FrameLayout>
 

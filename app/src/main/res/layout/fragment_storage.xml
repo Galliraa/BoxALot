@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:background="@drawable/white_border">
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/storageroomDetailsViewPager"
         android:layout_width="match_parent"
         android:layout_height="300dp"

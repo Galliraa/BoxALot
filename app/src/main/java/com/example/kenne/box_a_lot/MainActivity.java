@@ -1,26 +1,29 @@
-
 package com.example.kenne.box_a_lot;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
+import com.example.kenne.box_a_lot.adapters.PageAdapter;
 import com.example.kenne.box_a_lot.customViews.LockableViewPager;
 import com.example.kenne.box_a_lot.fragments.StorageRoomFragment;
+import com.example.kenne.box_a_lot.fragments.UserFragment;
 import com.example.kenne.box_a_lot.interfaces.ChangeFragmentInterface;
 import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
 import com.example.kenne.box_a_lot.models.StorageRoom;
-import com.example.kenne.box_a_lot.adapters.PageAdapter;
-import java.util.List;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 
 public class MainActivity extends AppCompatActivity implements UiUpdateInterface, StorageRoomFragment.OnListFragmentInteractionListener {
 
-    private final static String EVENT_TAG = "EVENT";
-    private final static String RESUME_TAG = "ONRESUME";
-    private static final String DETAILS_FRAG = "details_fragment";
 
     @Override
     public void onListFragmentInteraction(StorageRoom item) {
@@ -28,18 +31,30 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
     }
 
     private enum UserMode {LIST_VIEW, DETAILS_VIEW, STORAGEROOM_VIEW}
-    private List<StorageRoom> storageRooms;
     private UserMode userMode;
-    private int selectedEventIndex;
     private LockableViewPager vpPager;
+    private TabLayout VPHeader;
+
+    private static final int LOGIN_REQUEST = 1;
 
     FragmentPagerAdapter adapterViewPager;
 
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Context context = getApplicationContext();
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        VPHeader = (TabLayout) findViewById(R.id.pager_header);
 
         vpPager = (LockableViewPager) findViewById(R.id.list_container);
 
@@ -47,12 +62,49 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
         vpPager.setAdapter(adapterViewPager);
         vpPager.setOffscreenPageLimit(3);
 
-
-            selectedEventIndex = 0;
-
             if(userMode == null){
                 userMode = UserMode.LIST_VIEW;  //default
             }
+
+
+            VPHeader.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    int i = tab.getPosition();
+                    switch(i){
+                        case 0:
+                            break;
+                        case 1:
+                            if (mFirebaseUser == null) {
+                                // Not signed in, launch the Sign In activity
+                                ((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
+
+                            }
+                            break;
+                        case 2:
+                            if (mFirebaseUser == null) {
+                                // Not signed in, launch the Sign In activity
+                                ((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
+                            }
+                            break;
+                        case 3:
+                            if (mFirebaseUser == null) {
+                                ((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
+                            }
+                            break;
+                    }
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
 
 
         // Attach the page change listener inside the activity
@@ -65,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
 
                 if (fragment != null)
                 {
-                   // ((UiUpdateInterface)fragment).updateEvents();
+
                 }
             }
 
@@ -99,6 +151,23 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+            else
+            {
+                vpPager.setCurrentItem(0);
+            }
+        }
+    }
 
     private void updateFragmentViewState(UserMode targetMode){
         if(targetMode == UserMode.LIST_VIEW) {
@@ -121,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(RESUME_TAG, "onResume: run");
     }
 
     @Override
@@ -133,6 +201,11 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
     public void showStorageRoom() {
 
         updateFragmentViewState(UserMode.DETAILS_VIEW);
+    }
+
+    @Override
+    public void goToMap() {
+        vpPager.setCurrentItem(0);
     }
 
 

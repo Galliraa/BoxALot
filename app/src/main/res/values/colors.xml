@@ -4,29 +4,9 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="graylight">#fafafa</color>
     <color name="starblue">#09c6df</color>
-    <color name="endblue">#0bcce6</color>
     <color name="colorAccent">#D81B60</color>
     <color name="text_color">#fff</color>
     <color name="Black">#FF000000</color>
-    <color name="colorOverlay">#78ffffff</color>
 
 
-    <array name="placeTypes">
-    <item>PlaceType</item>
-    <item>Address</item>
-    <item>Cities</item>
-    <item>Establishment</item>
-    <item>Geocode</item>
-    <item>Regions</item>
-    <item>All</item>
-</array>
-<array name="placeTypesValue">
-    <item>0</item>
-    <item>2</item>
-    <item>5</item>
-    <item>34</item>
-    <item>1007</item>
-    <item>4</item>
-    <item>0</item>
-</array>
 </resources>

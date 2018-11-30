@@ -2,24 +2,22 @@ package com.example.kenne.box_a_lot.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.view.ViewGroup;
 
-import com.example.kenne.box_a_lot.R;
 import com.example.kenne.box_a_lot.fragments.CreateStoragePage1Fragment;
 import com.example.kenne.box_a_lot.fragments.CreateStoragePage2Fragment;
-import com.example.kenne.box_a_lot.fragments.MapsFragment;
 import com.example.kenne.box_a_lot.fragments.MapsRootFragment;
 import com.example.kenne.box_a_lot.fragments.UserFragment;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 //sources:
 // https://github.com/codepath/android_guides/wiki/ViewPager-with-FragmentPagerAdapter

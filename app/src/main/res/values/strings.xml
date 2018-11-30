@@ -31,6 +31,11 @@
     <string name="input_room_desc">Giv en kort beskrivelse af rummet</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
+    <string name="sign_out">Log af</string>
+
+    <string name="facebook_app_id">200961497454786</string>
+    <string name="fb_login_protocol_scheme">fb200961497454786</string>
+
 
 
 
@@ -43,7 +48,4 @@
         <item>Loftrum</item>
     </string-array>
 
-
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
 </resources>

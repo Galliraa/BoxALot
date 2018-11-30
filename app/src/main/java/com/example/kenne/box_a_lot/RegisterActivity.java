@@ -1,10 +1,7 @@
 package com.example.kenne.box_a_lot;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -16,21 +13,36 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private static final String MESSAGES_CHILD = "Users/";
+    private DatabaseReference mFirebaseDatabaseReference;
     private EditText inputEmail, inputPassword, inputFullName, inputPhonenumber;
     private Button btnSignUp;
     private FirebaseAuth auth;
-    private User user;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private User user = new User();
+
+    private String name;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
 
         btnSignUp = (Button) findViewById(R.id.register_register_Btn);
@@ -40,7 +52,27 @@ public class RegisterActivity extends AppCompatActivity {
         inputPhonenumber = (EditText) findViewById(R.id.register_PhonoNumber_ET);
 
 
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
 
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(inputFullName.getText().toString()).build();
+                        user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    //Log.d("Display name: ", FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                                    name =  FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                                }
+                            }
+                        });
+
+                }
+            }
+        };
 
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -80,10 +112,9 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    user  = new User();
                                     user.setName(inputFullName.getText().toString());
-                                    user.setPhoneNumber(inputPhonenumber.toString());
-                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                    user.setPhoneNumber(inputPhonenumber.getText().toString());
+                                    mFirebaseDatabaseReference.child(MESSAGES_CHILD +  "/" + auth.getCurrentUser().getUid()).setValue(user.getUserMap());
                                     finish();
                                 }
                             }
@@ -97,6 +128,20 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(mAuthListener); //firebaseAuth is of class FirebaseAuth
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            auth.removeAuthStateListener(mAuthListener);
+        }
     }
 }
 

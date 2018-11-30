@@ -1,18 +1,18 @@
 package com.example.kenne.box_a_lot;
 
-import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.kenne.box_a_lot.fragments.StorageFragment;
 import com.example.kenne.box_a_lot.models.StorageRoom;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 public class StorageroomViewer extends AppCompatActivity {
 
@@ -34,7 +34,7 @@ public class StorageroomViewer extends AppCompatActivity {
         storageroom.StorageMap = (HashMap<String,Object>)getIntent().getSerializableExtra("storageroom");
         storageFragment = new StorageFragment();
         storageFragment.setStorage(storageroom);
-        //storageFragment.setStorage();
+
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
         /*

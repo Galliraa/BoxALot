@@ -1,11 +1,8 @@
 package com.example.kenne.box_a_lot.models;
 
-import android.support.v4.app.SupportActivity;
-
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +11,6 @@ import java.util.Map;
 public class StorageRoom {
 
     public static List<StorageRoom> ITEMS = new ArrayList<StorageRoom>();
-
-
-    public static final Map<String, StorageRoom> ITEM_MAP = new HashMap<String, StorageRoom>();
 
     public Map<String, Object> StorageMap = new HashMap<>();
 

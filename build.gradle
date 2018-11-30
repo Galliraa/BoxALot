@@ -5,26 +5,31 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
-        
 
+        classpath 'com.android.tools.build:gradle:3.2.1'
+
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.google.gms:google-services:4.1.0'
     }
+
 }
 
 allprojects {
     repositories {
         google()
-
+        maven { url "http://dl.bintray.com/chat-sdk/chat-sdk-android" }
         maven { url 'https://jitpack.io' }
         jcenter()
     }
 }
 
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

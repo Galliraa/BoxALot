@@ -2,7 +2,7 @@ package com.example.kenne.box_a_lot.adapters;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;

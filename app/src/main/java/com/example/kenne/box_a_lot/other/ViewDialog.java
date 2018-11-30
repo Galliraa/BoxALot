@@ -1,20 +1,19 @@
 package com.example.kenne.box_a_lot.other;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.view.Window;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.example.kenne.box_a_lot.R;
 import com.example.kenne.box_a_lot.customViews.GifImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class ViewDialog {
 
-    Activity activity;
+    AppCompatActivity activity;
     Dialog dialog;
     //..we need the context else we can not create the dialog so get context in constructor
-    public ViewDialog(Activity activity) {
+    public ViewDialog(AppCompatActivity activity) {
         this.activity = activity;
     }
 

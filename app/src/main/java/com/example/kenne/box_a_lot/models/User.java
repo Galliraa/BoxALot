@@ -1,17 +1,19 @@
 package com.example.kenne.box_a_lot.models;
 
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class User {
 
-    Map<String, Object> userMap = new HashMap<>();
+    private Map<String, Object> userMap = new HashMap<>();
+
+    public Map<String, Object> getUserMap() {
+        return userMap;
+    }
 
     public void setUserMap(DocumentSnapshot document) {
         this.setAddress((String)document.get("address"));
