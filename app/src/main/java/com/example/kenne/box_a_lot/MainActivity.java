@@ -1,9 +1,9 @@
 package com.example.kenne.box_a_lot;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.kenne.box_a_lot.adapters.PageAdapter;
 import com.example.kenne.box_a_lot.customViews.LockableViewPager;
@@ -12,17 +12,18 @@ import com.example.kenne.box_a_lot.fragments.UserFragment;
 import com.example.kenne.box_a_lot.interfaces.ChangeFragmentInterface;
 import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
 import com.example.kenne.box_a_lot.models.StorageRoom;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 
-public class MainActivity extends AppCompatActivity implements UiUpdateInterface, StorageRoomFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements UiUpdateInterface, StorageRoomFragment.OnListFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
 
 
     @Override
@@ -30,12 +31,20 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
 
     }
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+
     private enum UserMode {LIST_VIEW, DETAILS_VIEW, STORAGEROOM_VIEW}
     private UserMode userMode;
     private LockableViewPager vpPager;
+    private LinearLayout mapsRootFragment;
     private TabLayout VPHeader;
 
     private static final int LOGIN_REQUEST = 1;
+    private static final int USERPAGE = 3;
 
     FragmentPagerAdapter adapterViewPager;
 
@@ -49,86 +58,62 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Context context = getApplicationContext();
+        VPHeader = findViewById(R.id.pager_header);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        VPHeader = (TabLayout) findViewById(R.id.pager_header);
+        if(mFirebaseUser != null) {
+            VPHeader.setVisibility(View.VISIBLE);
+        }
+        else {
+            VPHeader.setVisibility(View.GONE);
+        }
 
-        vpPager = (LockableViewPager) findViewById(R.id.list_container);
 
-        adapterViewPager = new PageAdapter(getSupportFragmentManager(), getApplicationContext());
-        vpPager.setAdapter(adapterViewPager);
-        vpPager.setOffscreenPageLimit(3);
+            vpPager = (LockableViewPager) findViewById(R.id.list_container);
 
-            if(userMode == null){
+            adapterViewPager = new PageAdapter(getSupportFragmentManager(), getApplicationContext());
+            vpPager.setAdapter(adapterViewPager);
+            vpPager.setOffscreenPageLimit(3);
+
+            if (userMode == null) {
                 userMode = UserMode.LIST_VIEW;  //default
             }
 
+            // Attach the page change listener inside the activity
+            vpPager.addOnPageChangeListener(new LockableViewPager.OnPageChangeListener() {
 
-            VPHeader.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                int currentPosition = 0;
+
+                // This method will be invoked when a new page becomes selected.
                 @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    int i = tab.getPosition();
-                    switch(i){
-                        case 0:
-                            break;
-                        case 1:
-                            if (mFirebaseUser == null) {
-                                // Not signed in, launch the Sign In activity
-                                //((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
+                public void onPageSelected(int position) {
 
-                            }
-                            break;
-                        case 2:
+                    vpPager.getAdapter().notifyDataSetChanged();
+
+
+//                currentPosition = position;
+
+                }
+
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    if (positionOffset == 0) {
+                        if (position == USERPAGE) {
                             if (mFirebaseUser == null) {
-                                // Not signed in, launch the Sign In activity
-                                //((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
+
+                                ((UserFragment) (((PageAdapter) vpPager.getAdapter()).getItem(position))).showLoginDialog(getSupportFragmentManager());
                             }
-                            break;
-                        case 3:
-                            if (mFirebaseUser == null) {
-                                ((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(i))).showLoginDialog(MainActivity.this, (Activity)MainActivity.this, getSupportFragmentManager());
-                            }
-                            break;
+                        }
                     }
                 }
 
                 @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-
+                public void onPageScrollStateChanged(int state) {
                 }
             });
 
-
-        // Attach the page change listener inside the activity
-        vpPager.addOnPageChangeListener( new LockableViewPager.OnPageChangeListener() {
-
-            // This method will be invoked when a new page becomes selected.
-            @Override
-            public void onPageSelected(int position) {
-                Fragment fragment = ((PageAdapter)vpPager.getAdapter()).getFragment(position);
-
-                if (fragment != null)
-                {
-
-                }
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
     }
 
     @Override
@@ -208,5 +193,13 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
         vpPager.setCurrentItem(0);
     }
 
+    @Override
+    public void loginSuccessfull() {
+        //((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(USERPAGE))).updateUI();
+    }
 
+    @Override
+    public void loginFailed() {
+        goToMap();
+    }
 }

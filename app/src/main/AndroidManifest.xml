@@ -107,11 +107,14 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppThemeWithActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.kenne.box_a_lot.MainActivity" />
         </activity>
+        <!-- Search results activity -->
+
+
         <activity android:name=".StorageroomViewer" />
 
     </application>

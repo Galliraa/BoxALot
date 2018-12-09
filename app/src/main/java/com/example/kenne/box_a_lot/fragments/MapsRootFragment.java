@@ -1,20 +1,37 @@
 package com.example.kenne.box_a_lot.fragments;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
+import com.example.kenne.box_a_lot.MainActivity;
 import com.example.kenne.box_a_lot.R;
+import com.example.kenne.box_a_lot.adapters.PlaceArrayAdapter;
 import com.example.kenne.box_a_lot.interfaces.ChangeFragmentInterface;
 import com.example.kenne.box_a_lot.models.StorageRoom;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,10 +52,11 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MapsRootFragment extends Fragment implements ChangeFragmentInterface{
+public class MapsRootFragment extends Fragment implements ChangeFragmentInterface  {
 
     private static final String TAG = "RootFragment";
     private static String FRAG_TAG = "MapsFragment";
@@ -51,6 +69,28 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
     private PlaceAutocompleteFragment placeAutoComplete;
     private StorageRoom storageRoom = null;
     private Place lastPlace = null;
+    private static final int GOOGLE_API_CLIENT_ID = 0;
+    private PlaceArrayAdapter mPlaceArrayAdapter;
+    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
+            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
+    //private GoogleApi mGoogleApiClient;
+    private PlaceDetectionClient mGoogleApiClient;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
+
+        mGoogleApiClient = Places.getPlaceDetectionClient(getActivity());
+
+        mPlaceArrayAdapter = new PlaceArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
+                BOUNDS_MOUNTAIN_VIEW, null);
+
+        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -220,7 +260,74 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
 
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        // TODO Auto-generated method stub
+        super.onAttach(activity);
+        androidx.appcompat.app.ActionBar actionBar=((MainActivity)activity).getSupportActionBar();
+    }
 
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+
+
+        androidx.appcompat.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar(); // you can use ABS or the non-bc ActionBar
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_HOME_AS_UP); // what's mainly important here is DISPLAY_SHOW_CUSTOM. the rest is optional
+
+        LayoutInflater inflater1 = (LayoutInflater)((AppCompatActivity) getActivity()).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // inflate the view that we created before
+        View v = inflater1.inflate(R.layout.search_bar, null);
+        AutoCompleteTextView textView =  (AutoCompleteTextView) v.findViewById(R.id.editText1);
+
+        //textView.setAdapter(searchAdapter);
+
+        textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // do something when the user clicks
+            }
+        });
+        actionBar.setCustomView(v);
+
+
+        inflater.inflate(R.menu.main_menu, menu);
+    }
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            Log.i("", "Selected: " + item.description);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+            Log.i("", "Fetching details for ID: " + item.placeId);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                Log.e("", "Place query did not complete. Error: " +
+                        places.getStatus().toString());
+                return;
+            }
+            // Selecting the first object buffer.
+            final Place place = places.get(0);
+            CharSequence attributions = places.getAttributions();
+
+            if (attributions != null) {
+
+            }
+        }
+    };
 
     public void SwitchFrag() {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -245,4 +352,5 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
             mapsFragment.clearMap();
             return markerArray;
     }
+
 }

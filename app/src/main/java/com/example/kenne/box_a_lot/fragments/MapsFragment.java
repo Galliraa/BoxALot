@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.kenne.box_a_lot.R;
 import com.example.kenne.box_a_lot.adapters.CustomInfoWindowAdapter;
 import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
+import com.example.kenne.box_a_lot.interfaces.UpdateAble;
 import com.example.kenne.box_a_lot.models.StorageRoom;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdate;
@@ -43,7 +44,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
         GoogleMap.OnCameraIdleListener,
         OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
-        StorageFragment.OnFragmentInteractionListener {
+        StorageFragment.OnFragmentInteractionListener,
+        UpdateAble {
 
     private List<String> markerMap;
     private SupportMapFragment mapFragment;
@@ -67,8 +69,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
         if (getArguments() != null) {
 
         }
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -220,5 +222,10 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
         mMap.animateCamera(location);
         lastRadius = radius;
         lastSearchLocaton = latLng;
+    }
+
+    @Override
+    public void update() {
+
     }
 }

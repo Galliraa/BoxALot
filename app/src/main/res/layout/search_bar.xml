@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center" >
+
+
+    <AutoCompleteTextView
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:imeOptions="actionSearch"
+        android:hint="Søg på lokation"
+        android:inputType="textAutoComplete|textAutoCorrect"
+        android:textColor="@color/Black">
+
+        <requestFocus />
+    </AutoCompleteTextView>
+
+</LinearLayout>

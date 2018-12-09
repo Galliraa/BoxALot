@@ -11,6 +11,7 @@ import com.example.kenne.box_a_lot.fragments.CreateStoragePage1Fragment;
 import com.example.kenne.box_a_lot.fragments.CreateStoragePage2Fragment;
 import com.example.kenne.box_a_lot.fragments.MapsRootFragment;
 import com.example.kenne.box_a_lot.fragments.UserFragment;
+import com.example.kenne.box_a_lot.interfaces.UpdateAble;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,6 +86,15 @@ public class PageAdapter extends FragmentPagerAdapter {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        UpdateAble f = (UpdateAble) object;
+        if (f != null) {
+            f.update();
+        }
+        return super.getItemPosition(object);
     }
 
     // Returns the page title for the top indicator

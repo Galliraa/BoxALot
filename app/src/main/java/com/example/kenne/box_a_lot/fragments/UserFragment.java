@@ -1,7 +1,6 @@
 package com.example.kenne.box_a_lot.fragments;
 
-import android.app.Activity;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,13 +14,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.kenne.box_a_lot.R;
 import com.example.kenne.box_a_lot.dialogFragments.CustomBlurDialogFragment;
+import com.example.kenne.box_a_lot.interfaces.UpdateAble;
 import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,23 +36,24 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.app.Activity.RESULT_OK;
 
 
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements UpdateAble {
 
     private String mUsername;
     private String mPhoneNumber;
     private String mPhotoUrl;
 
+    private static final int DIALOG_REQUEST_CODE = 10;
     public static final String ANONYMOUS = "anonymous";
 
-    private CircleImageView profileIV;
-    private TextView usernameTV;
-    private TextView phoneNumberTV;
-    private Button  signOutBtn;
+    static private CircleImageView profileIV;
+    static private TextView usernameTV;
+    static private TextView phoneNumberTV;
+    static private Button  signOutBtn;
 
     private static final int LOGIN_REQUEST = 1;
 
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
+    static private FirebaseAuth mFirebaseAuth;
+    static private FirebaseUser mFirebaseUser;
 
     public UserFragment() {
         // Required empty public constructor
@@ -78,15 +83,7 @@ public class UserFragment extends Fragment {
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         if (mFirebaseUser == null) {
-            // Not signed in, launch the Sign In activity
-            /*final Dialog dialog = new Dialog(getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_not_logged_in_user_frag);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            dialog.show();*/
-            //startActivityForResult(new Intent(getActivity(), LoginActivity.class), LOGIN_REQUEST);
 
-            // return;
         }
         else {
             mUsername = mFirebaseUser.getDisplayName();
@@ -99,16 +96,6 @@ public class UserFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       /* if (getArguments() != null) {
-
-        }
-
-        if (mFirebaseUser == null) {
-            // Not signed in, launch the Sign In activity
-            startActivityForResult(new Intent(getActivity(), LoginActivity.class), LOGIN_REQUEST);
-
-            return;
-        }*/
 
         usernameTV = view.findViewById(R.id.user_usernameTV);
         phoneNumberTV = view.findViewById(R.id.user_phonenumberTV);
@@ -119,11 +106,19 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mFirebaseAuth = FirebaseAuth.getInstance();
-                mFirebaseAuth.signOut();
-                //mFirebaseAuth.getCurrentUser().getProviderId();
-                //Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                mUsername = ANONYMOUS;
-                //startActivity(new Intent(this, SignInActivity.class));
+                List<? extends UserInfo> provider = mFirebaseUser.getProviderData();
+
+                for(int i = 0; i < provider.size(); i++)
+                {
+                    if(provider.get(i).getProviderId().equals("facebook.com")){
+                        LoginManager.getInstance().logOut();
+                    }
+                    else if(provider.get(i).getProviderId().equals("firebase")){
+                        mFirebaseAuth.signOut();
+                    }
+                }
+
+
                 ((UiUpdateInterface)getActivity()).goToMap();
             }
         });
@@ -160,7 +155,6 @@ public class UserFragment extends Fragment {
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
@@ -174,6 +168,7 @@ public class UserFragment extends Fragment {
             }
             else
             {
+
                 ((UiUpdateInterface)getActivity()).goToMap();
             }
         }
@@ -181,9 +176,98 @@ public class UserFragment extends Fragment {
 
 
 
-    public void showLoginDialog(Context context, Activity activity, FragmentManager supportFragmentManager) {
+    public void showLoginDialog(FragmentManager supportFragmentManager) {
         CustomBlurDialogFragment customDialog= new CustomBlurDialogFragment();
+        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
 
-        customDialog.show(supportFragmentManager, "");
+                mFirebaseAuth = FirebaseAuth.getInstance();
+                mFirebaseUser = mFirebaseAuth.getCurrentUser();
+                if (mFirebaseUser != null) {
+
+                    mUsername = mFirebaseUser.getDisplayName();
+                    mPhoneNumber = mFirebaseUser.getPhoneNumber();
+                    mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+
+                    usernameTV.setText(mUsername);
+                    phoneNumberTV.setText(mPhoneNumber);
+
+                    if (mPhotoUrl != null && getActivity() != null) {
+                        if (mPhotoUrl.startsWith("gs://")) {
+                            StorageReference storageReference = FirebaseStorage.getInstance()
+                                    .getReferenceFromUrl(mPhotoUrl);
+                            storageReference.getDownloadUrl().addOnCompleteListener(
+                                    new OnCompleteListener<Uri>() {
+                                        private String TAG = "UserFragment";
+
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            if (task.isSuccessful()) {
+                                                String downloadUrl = task.getResult().toString();
+                                                Glide.with(profileIV.getContext())
+                                                        .load(downloadUrl)
+                                                        .into(profileIV);
+                                            } else {
+                                                Log.w(TAG, "Getting download url was not successful.",
+                                                        task.getException());
+                                            }
+                                        }
+                                    });
+                        } else {
+                            Glide.with(getActivity())
+                                    .load(mPhotoUrl)
+                                    .into(profileIV);
+                        }
+                    }
+
+                }
+            }
+        });
+        customDialog.show(supportFragmentManager.beginTransaction(), "customDialog");
+    }
+
+    @Override
+    public void update() {
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        if (mFirebaseUser != null) {
+
+            mUsername = mFirebaseUser.getDisplayName();
+            mPhoneNumber = mFirebaseUser.getPhoneNumber();
+            mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+
+            usernameTV.setText(mUsername);
+            phoneNumberTV.setText(mPhoneNumber);
+
+            if (mPhotoUrl != null && getActivity() != null) {
+                if (mPhotoUrl.startsWith("gs://")) {
+                    StorageReference storageReference = FirebaseStorage.getInstance()
+                            .getReferenceFromUrl(mPhotoUrl);
+                    storageReference.getDownloadUrl().addOnCompleteListener(
+                            new OnCompleteListener<Uri>() {
+                                private String TAG = "UserFragment";
+
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        String downloadUrl = task.getResult().toString();
+                                        Glide.with(profileIV.getContext())
+                                                .load(downloadUrl)
+                                                .into(profileIV);
+                                    } else {
+                                        Log.w(TAG, "Getting download url was not successful.",
+                                                task.getException());
+                                    }
+                                }
+                            });
+                } else {
+                    Glide.with(getActivity())
+                            .load(mPhotoUrl)
+                            .into(profileIV);
+                }
+            }
+
+        }
     }
 }

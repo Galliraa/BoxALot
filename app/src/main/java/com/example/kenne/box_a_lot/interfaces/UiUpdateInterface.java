@@ -4,5 +4,6 @@ public interface UiUpdateInterface {
 
     void showStorageRoom();
     void goToMap();
-
+    void loginSuccessfull();
+    void loginFailed();
 }
