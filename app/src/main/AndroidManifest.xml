@@ -114,9 +114,8 @@
         </activity>
         <!-- Search results activity -->
 
-
         <activity android:name=".StorageroomViewer" />
-
+        <activity android:name=".CreateStorageroomActivity"></activity>
     </application>
 
 </manifest>

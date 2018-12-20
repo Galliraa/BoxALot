@@ -67,6 +67,7 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
     private static MapsFragment mapsFragment = new MapsFragment();
     private static StorageRoomFragment storageRoomFragment = new StorageRoomFragment();
     private FloatingActionButton listFab;
+    private FloatingActionButton createStorageFab;
     private List<MarkerOptions> markerArray = new ArrayList<>();
     private PlaceAutocompleteFragment placeAutoComplete;
     private StorageRoom storageRoom = null;

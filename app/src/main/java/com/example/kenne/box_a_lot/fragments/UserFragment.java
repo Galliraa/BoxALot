@@ -87,9 +87,6 @@ public class UserFragment extends Fragment/* implements UpdateAble*/ {
 
         actionBar.setDisplayHomeAsUpEnabled(false);
 
-        //actionBar.setCustomView(actionBarView);
-        //actionBar.hide();
-
     }
     @Override
     public void onResume() {
@@ -136,7 +133,6 @@ public class UserFragment extends Fragment/* implements UpdateAble*/ {
 
 
                 ((UiUpdateInterface)getActivity()).goToMap(false);
-                //((UiUpdateInterface)getActivity()).hideTab();
             }
         });
         usernameTV.setText(mUsername);
