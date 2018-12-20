@@ -73,6 +73,8 @@ dependencies {
 
     implementation 'com.facebook.android:facebook-android-sdk:4.38.1'
 
+    implementation 'com.seatgeek:placesautocomplete:0.3-SNAPSHOT'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'

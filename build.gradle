@@ -23,6 +23,7 @@ allprojects {
     repositories {
         google()
         maven { url "http://dl.bintray.com/chat-sdk/chat-sdk-android" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://jitpack.io' }
         jcenter()
     }

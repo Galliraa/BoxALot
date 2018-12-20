@@ -126,15 +126,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
                 // ...
+                setResult(RESULT_CANCELED);
+                //---close the activity---
+                finish();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
                 // ...
+                setResult(RESULT_CANCELED);
+                //---close the activity---
+                finish();
             }
         });
     }
+
 
     @Override
     protected void onStart() {
@@ -191,6 +198,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Log.w("TAG", "signInWithEmail", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
+                                setResult(RESULT_CANCELED);
+                                //---close the activity---
+                                finish();
                             } else {
                                 Intent data = new Intent();
                                 //String text = "Result to be returned...."
@@ -237,6 +247,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
+                        setResult(RESULT_CANCELED);
+                        //---close the activity---
+                        finish();
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -275,12 +288,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
+                            setResult(RESULT_OK);
+                            //---close the activity---
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            setResult(RESULT_CANCELED);
+                            //---close the activity---
+                            finish();
 
                         }
 

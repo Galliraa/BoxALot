@@ -7,23 +7,24 @@ import android.widget.LinearLayout;
 
 import com.example.kenne.box_a_lot.adapters.PageAdapter;
 import com.example.kenne.box_a_lot.customViews.LockableViewPager;
+import com.example.kenne.box_a_lot.fragments.CreateStoragePage1Fragment;
+import com.example.kenne.box_a_lot.fragments.CreateStoragePage2Fragment;
+import com.example.kenne.box_a_lot.fragments.MapsRootFragment;
 import com.example.kenne.box_a_lot.fragments.StorageRoomFragment;
 import com.example.kenne.box_a_lot.fragments.UserFragment;
 import com.example.kenne.box_a_lot.interfaces.ChangeFragmentInterface;
 import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
 import com.example.kenne.box_a_lot.models.StorageRoom;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
 
 
-public class MainActivity extends AppCompatActivity implements UiUpdateInterface, StorageRoomFragment.OnListFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements UiUpdateInterface, StorageRoomFragment.OnListFragmentInteractionListener {
 
 
     @Override
@@ -31,12 +32,8 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
 
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-
+    private boolean showTabBool;
+    private androidx.appcompat.app.ActionBar actionBar;
     private enum UserMode {LIST_VIEW, DETAILS_VIEW, STORAGEROOM_VIEW}
     private UserMode userMode;
     private LockableViewPager vpPager;
@@ -46,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
     private static final int LOGIN_REQUEST = 1;
     private static final int USERPAGE = 3;
 
-    FragmentPagerAdapter adapterViewPager;
+    PageAdapter adapterViewPager;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -60,25 +57,43 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
 
         VPHeader = findViewById(R.id.pager_header);
 
+        actionBar = getSupportActionBar();
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
+        userMode = UserMode.LIST_VIEW;  //default
+
+
+        vpPager = (LockableViewPager) findViewById(R.id.list_container);
+
+        adapterViewPager = new PageAdapter(getSupportFragmentManager(), getApplicationContext());
+
+
+
         if(mFirebaseUser != null) {
+            showTabBool = true;
+            vpPager.setOffscreenPageLimit(4);
+            adapterViewPager.addFragment(new MapsRootFragment(),0);
+            adapterViewPager.addFragment(new CreateStoragePage2Fragment(),1);
+            adapterViewPager.addFragment(new CreateStoragePage1Fragment(),2);
+            adapterViewPager.addFragment(new UserFragment(),3);
             VPHeader.setVisibility(View.VISIBLE);
         }
         else {
+            showTabBool = false;
+            vpPager.setOffscreenPageLimit(1);
+            adapterViewPager.addFragment(new MapsRootFragment(),0);
             VPHeader.setVisibility(View.GONE);
         }
 
+        vpPager.setAdapter(adapterViewPager);
 
-            vpPager = (LockableViewPager) findViewById(R.id.list_container);
 
-            adapterViewPager = new PageAdapter(getSupportFragmentManager(), getApplicationContext());
-            vpPager.setAdapter(adapterViewPager);
-            vpPager.setOffscreenPageLimit(3);
+
 
             if (userMode == null) {
-                userMode = UserMode.LIST_VIEW;  //default
+
             }
 
             // Attach the page change listener inside the activity
@@ -89,24 +104,26 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
                 // This method will be invoked when a new page becomes selected.
                 @Override
                 public void onPageSelected(int position) {
+                    invalidateFragmentMenus(position);
 
-                    vpPager.getAdapter().notifyDataSetChanged();
+                    Fragment fragment = ((PageAdapter)vpPager.getAdapter()).getFragment(position);
 
-
-//                currentPosition = position;
-
+                    if(position != 0 && fragment != null && mFirebaseUser != null)
+                    {
+                        fragment.onResume();
+                    }
+                    else if(position == 0 && showTabBool == false && adapterViewPager.getCount() != 1)
+                    {
+                        VPHeader.setVisibility(View.GONE);
+                        adapterViewPager.removeFragment(3);
+                        adapterViewPager.removeFragment(2);
+                        adapterViewPager.removeFragment(1);
+                        adapterViewPager.notifyDataSetChanged();
+                    }
                 }
 
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    if (positionOffset == 0) {
-                        if (position == USERPAGE) {
-                            if (mFirebaseUser == null) {
-
-                                ((UserFragment) (((PageAdapter) vpPager.getAdapter()).getItem(position))).showLoginDialog(getSupportFragmentManager());
-                            }
-                        }
-                    }
                 }
 
                 @Override
@@ -114,6 +131,13 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
                 }
             });
 
+    }
+
+    private void invalidateFragmentMenus(int position) {
+        for (int i = 0; i < adapterViewPager.getCount(); i++) {
+            adapterViewPager.getItem(i).setHasOptionsMenu(i == position);
+        }
+        invalidateOptionsMenu(); //or respectively its support method.
     }
 
     @Override
@@ -145,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
                 // The user picked a contact.
                 // The Intent's data Uri identifies which contact was selected.
 
+                this.showTab();
                 // Do something with the contact here (bigger example below)
             }
             else
@@ -189,17 +214,34 @@ public class MainActivity extends AppCompatActivity implements UiUpdateInterface
     }
 
     @Override
-    public void goToMap() {
-        vpPager.setCurrentItem(0);
-    }
+    public void goToMap(boolean loggedIn) {
+        if(!loggedIn)
+            showTabBool = false;
+        if(vpPager.getCurrentItem() != 0)
+            vpPager.setCurrentItem(0);
+        else{
+            VPHeader.setVisibility(View.GONE);
+            adapterViewPager.removeFragment(3);
+            adapterViewPager.removeFragment(2);
+            adapterViewPager.removeFragment(1);
+            adapterViewPager.notifyDataSetChanged();
+        }
 
-    @Override
-    public void loginSuccessfull() {
-        //((UserFragment)(((PageAdapter)vpPager.getAdapter()).getItem(USERPAGE))).updateUI();
     }
 
     @Override
     public void loginFailed() {
-        goToMap();
+        goToMap(false);
+    }
+
+    @Override
+    public void showTab() {
+
+        showTabBool = true;
+        adapterViewPager.addFragment(new CreateStoragePage2Fragment(),1);
+        adapterViewPager.addFragment(new CreateStoragePage1Fragment(),2);
+        adapterViewPager.addFragment(new UserFragment(),3);
+        adapterViewPager.notifyDataSetChanged();
+        VPHeader.setVisibility(View.VISIBLE);
     }
 }

@@ -1,11 +1,13 @@
 package com.example.kenne.box_a_lot.fragments;
 
-import android.content.DialogInterface;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,8 +15,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.kenne.box_a_lot.R;
-import com.example.kenne.box_a_lot.dialogFragments.CustomBlurDialogFragment;
-import com.example.kenne.box_a_lot.interfaces.UpdateAble;
 import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,18 +29,20 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class UserFragment extends Fragment implements UpdateAble {
+public class UserFragment extends Fragment/* implements UpdateAble*/ {
 
     private String mUsername;
     private String mPhoneNumber;
     private String mPhotoUrl;
+
+    private View actionBarView;
 
     private static final int DIALOG_REQUEST_CODE = 10;
     public static final String ANONYMOUS = "anonymous";
@@ -63,9 +65,8 @@ public class UserFragment extends Fragment implements UpdateAble {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
+        setHasOptionsMenu(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
     }
 
     @Override
@@ -77,8 +78,29 @@ public class UserFragment extends Fragment implements UpdateAble {
     }
 
     @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+
+        androidx.appcompat.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_HOME_AS_UP); // what's mainly important here is DISPLAY_SHOW_CUSTOM. the rest is optional
+
+        actionBar.setDisplayHomeAsUpEnabled(false);
+
+        //actionBar.setCustomView(actionBarView);
+        //actionBar.hide();
+
+    }
+    @Override
     public void onResume() {
         super.onResume();
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
@@ -90,12 +112,6 @@ public class UserFragment extends Fragment implements UpdateAble {
             mPhoneNumber = mFirebaseUser.getPhoneNumber();
             mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
         }
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
 
         usernameTV = view.findViewById(R.id.user_usernameTV);
         phoneNumberTV = view.findViewById(R.id.user_phonenumberTV);
@@ -119,7 +135,8 @@ public class UserFragment extends Fragment implements UpdateAble {
                 }
 
 
-                ((UiUpdateInterface)getActivity()).goToMap();
+                ((UiUpdateInterface)getActivity()).goToMap(false);
+                //((UiUpdateInterface)getActivity()).hideTab();
             }
         });
         usernameTV.setText(mUsername);
@@ -168,106 +185,8 @@ public class UserFragment extends Fragment implements UpdateAble {
             }
             else
             {
-
-                ((UiUpdateInterface)getActivity()).goToMap();
+                ((UiUpdateInterface)getActivity()).goToMap(false);
             }
-        }
-    }
-
-
-
-    public void showLoginDialog(FragmentManager supportFragmentManager) {
-        CustomBlurDialogFragment customDialog= new CustomBlurDialogFragment();
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-
-                mFirebaseAuth = FirebaseAuth.getInstance();
-                mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null) {
-
-                    mUsername = mFirebaseUser.getDisplayName();
-                    mPhoneNumber = mFirebaseUser.getPhoneNumber();
-                    mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-
-                    usernameTV.setText(mUsername);
-                    phoneNumberTV.setText(mPhoneNumber);
-
-                    if (mPhotoUrl != null && getActivity() != null) {
-                        if (mPhotoUrl.startsWith("gs://")) {
-                            StorageReference storageReference = FirebaseStorage.getInstance()
-                                    .getReferenceFromUrl(mPhotoUrl);
-                            storageReference.getDownloadUrl().addOnCompleteListener(
-                                    new OnCompleteListener<Uri>() {
-                                        private String TAG = "UserFragment";
-
-                                        @Override
-                                        public void onComplete(@NonNull Task<Uri> task) {
-                                            if (task.isSuccessful()) {
-                                                String downloadUrl = task.getResult().toString();
-                                                Glide.with(profileIV.getContext())
-                                                        .load(downloadUrl)
-                                                        .into(profileIV);
-                                            } else {
-                                                Log.w(TAG, "Getting download url was not successful.",
-                                                        task.getException());
-                                            }
-                                        }
-                                    });
-                        } else {
-                            Glide.with(getActivity())
-                                    .load(mPhotoUrl)
-                                    .into(profileIV);
-                        }
-                    }
-
-                }
-            }
-        });
-        customDialog.show(supportFragmentManager.beginTransaction(), "customDialog");
-    }
-
-    @Override
-    public void update() {
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if (mFirebaseUser != null) {
-
-            mUsername = mFirebaseUser.getDisplayName();
-            mPhoneNumber = mFirebaseUser.getPhoneNumber();
-            mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-
-            usernameTV.setText(mUsername);
-            phoneNumberTV.setText(mPhoneNumber);
-
-            if (mPhotoUrl != null && getActivity() != null) {
-                if (mPhotoUrl.startsWith("gs://")) {
-                    StorageReference storageReference = FirebaseStorage.getInstance()
-                            .getReferenceFromUrl(mPhotoUrl);
-                    storageReference.getDownloadUrl().addOnCompleteListener(
-                            new OnCompleteListener<Uri>() {
-                                private String TAG = "UserFragment";
-
-                                @Override
-                                public void onComplete(@NonNull Task<Uri> task) {
-                                    if (task.isSuccessful()) {
-                                        String downloadUrl = task.getResult().toString();
-                                        Glide.with(profileIV.getContext())
-                                                .load(downloadUrl)
-                                                .into(profileIV);
-                                    } else {
-                                        Log.w(TAG, "Getting download url was not successful.",
-                                                task.getException());
-                                    }
-                                }
-                            });
-                } else {
-                    Glide.with(getActivity())
-                            .load(mPhotoUrl)
-                            .into(profileIV);
-                }
-            }
-
         }
     }
 }

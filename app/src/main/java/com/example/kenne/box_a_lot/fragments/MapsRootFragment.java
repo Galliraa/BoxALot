@@ -3,30 +3,27 @@ package com.example.kenne.box_a_lot.fragments;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
+import com.example.kenne.box_a_lot.LoginActivity;
 import com.example.kenne.box_a_lot.MainActivity;
 import com.example.kenne.box_a_lot.R;
 import com.example.kenne.box_a_lot.adapters.PlaceArrayAdapter;
 import com.example.kenne.box_a_lot.interfaces.ChangeFragmentInterface;
+import com.example.kenne.box_a_lot.interfaces.UiUpdateInterface;
 import com.example.kenne.box_a_lot.models.StorageRoom;
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -36,6 +33,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -56,8 +56,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MapsRootFragment extends Fragment implements ChangeFragmentInterface  {
+public class MapsRootFragment extends Fragment implements ChangeFragmentInterface {
 
+    private static final int LOGIN_REQUEST = 1;
+    private View actionBarView;
     private static final String TAG = "RootFragment";
     private static String FRAG_TAG = "MapsFragment";
     private static final String LIST_TAG = "ListFragment";
@@ -73,8 +75,7 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
     private PlaceArrayAdapter mPlaceArrayAdapter;
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
             new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
-    //private GoogleApi mGoogleApiClient;
-    private PlaceDetectionClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,12 +83,11 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
         setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
 
-        mGoogleApiClient = Places.getPlaceDetectionClient(getActivity());
+        LayoutInflater inflater1 = (LayoutInflater) ((AppCompatActivity) getActivity()).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // inflate the view that we created before
 
-        mPlaceArrayAdapter = new PlaceArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
-                BOUNDS_MOUNTAIN_VIEW, null);
 
-        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
+        actionBarView = inflater1.inflate(R.layout.search_bar, null);
 
     }
 
@@ -139,6 +139,29 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
 
             }
         });
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        // TODO Auto-generated method stub
+        super.onAttach(activity);
+        androidx.appcompat.app.ActionBar actionBar=((MainActivity)activity).getSupportActionBar();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+        Menu menu, MenuInflater inflater) {
+
+        androidx.appcompat.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar(); // you can use ABS or the non-bc ActionBar
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_HOME_AS_UP); // what's mainly important here is DISPLAY_SHOW_CUSTOM. the rest is optional
+
+        actionBar.setDisplayHomeAsUpEnabled(false);
+
+        actionBar.setCustomView(actionBarView);
+        actionBar.show();
+
         Object pac = getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete = (PlaceAutocompleteFragment) pac;
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -187,7 +210,7 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
                                                         storageRoomIsOnMap = true;
                                                         break;
                                                     }
-                                                }
+                                            }
                                             if(storageRoomIsOnMap != true) {
                                                 storageRoom = new StorageRoom();
                                                 storageRoom.setStorageMap(document);
@@ -258,76 +281,69 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
             }
         });
 
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+        {
+            inflater.inflate(R.menu.main_menu_logged_in, menu);
+        }
+        else{
+            inflater.inflate(R.menu.main_menu_not_logged_in, menu);
+        }
+
+
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
-        super.onAttach(activity);
-        androidx.appcompat.app.ActionBar actionBar=((MainActivity)activity).getSupportActionBar();
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        menu.clear();
+
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+            getActivity().getMenuInflater().inflate(R.menu.main_menu_logged_in, menu);
+        else
+            getActivity().getMenuInflater().inflate(R.menu.main_menu_not_logged_in, menu);
     }
 
     @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-
-
-        androidx.appcompat.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar(); // you can use ABS or the non-bc ActionBar
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_HOME
-                | ActionBar.DISPLAY_HOME_AS_UP); // what's mainly important here is DISPLAY_SHOW_CUSTOM. the rest is optional
-
-        LayoutInflater inflater1 = (LayoutInflater)((AppCompatActivity) getActivity()).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        // inflate the view that we created before
-        View v = inflater1.inflate(R.layout.search_bar, null);
-        AutoCompleteTextView textView =  (AutoCompleteTextView) v.findViewById(R.id.editText1);
-
-        //textView.setAdapter(searchAdapter);
-
-        textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // do something when the user clicks
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sign_in_menu : {
+                startActivityForResult(new Intent(getActivity(), LoginActivity.class),LOGIN_REQUEST);
+                return true;
             }
-        });
-        actionBar.setCustomView(v);
+            case R.id.sign_out_menu : {
+
+                FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+                List<? extends UserInfo> provider = mFirebaseUser.getProviderData();
+
+                for(int i = 0; i < provider.size(); i++)
+                {
+                    if(provider.get(i).getProviderId().equals("facebook.com")){
+                        LoginManager.getInstance().logOut();
+                    }
+                    else if(provider.get(i).getProviderId().equals("firebase")){
+                        mFirebaseAuth.signOut();
+                    }
+                }
 
 
-        inflater.inflate(R.menu.main_menu, menu);
+                ((UiUpdateInterface)getActivity()).goToMap(false);
+                getActivity().invalidateOptionsMenu();
+
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
-            final String placeId = String.valueOf(item.placeId);
-            Log.i("", "Selected: " + item.description);
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-            Log.i("", "Fetching details for ID: " + item.placeId);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == LOGIN_REQUEST && resultCode == Activity.RESULT_OK) {
+            ((UiUpdateInterface)getActivity()).showTab();
         }
-    };
-
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                Log.e("", "Place query did not complete. Error: " +
-                        places.getStatus().toString());
-                return;
-            }
-            // Selecting the first object buffer.
-            final Place place = places.get(0);
-            CharSequence attributions = places.getAttributions();
-
-            if (attributions != null) {
-
-            }
-        }
-    };
+    }
 
     public void SwitchFrag() {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();

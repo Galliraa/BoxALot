@@ -14,7 +14,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
-import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class PlaceArrayAdapter
         extends ArrayAdapter<PlaceArrayAdapter.PlaceAutocomplete> implements Filterable {
     private static final String TAG = "PlaceArrayAdapter";
-    private PlaceDetectionClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
     private AutocompleteFilter mPlaceFilter;
     private LatLngBounds mBounds;
     private ArrayList<PlaceAutocomplete> mResultList;
@@ -45,10 +44,12 @@ public class PlaceArrayAdapter
         mPlaceFilter = filter;
     }
 
-    public void setGoogleApiClient(PlaceDetectionClient googleApiClient) {
-
+    public void setGoogleApiClient(GoogleApiClient googleApiClient) {
+        if (googleApiClient == null || !googleApiClient.isConnected()) {
+            mGoogleApiClient = null;
+        } else {
             mGoogleApiClient = googleApiClient;
-
+        }
     }
 
     @Override
