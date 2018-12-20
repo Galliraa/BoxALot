@@ -36,6 +36,7 @@
     <string name="facebook_app_id">200961497454786</string>
     <string name="fb_login_protocol_scheme">fb200961497454786</string>
     <string name="Spinner_txt">Choose storageroom type</string>
+    <string name="Add_pic">Tilføj billeder</string>
 
 
     <string-array name="type_deport_array">
