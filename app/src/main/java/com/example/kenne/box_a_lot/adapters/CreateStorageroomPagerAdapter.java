@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 
 import com.example.kenne.box_a_lot.fragments.CreateStoragePage1Fragment;
 import com.example.kenne.box_a_lot.fragments.CreateStoragePage2Fragment;
-import com.example.kenne.box_a_lot.fragments.MapsRootFragment;
-import com.example.kenne.box_a_lot.fragments.UserFragment;
+import com.example.kenne.box_a_lot.fragments.CreateStoragePage3Fragment;
+import com.example.kenne.box_a_lot.fragments.CreateStoragePage4Fragment;
 import com.example.kenne.box_a_lot.interfaces.UpdateAble;
 
 import java.util.HashMap;
@@ -76,13 +76,13 @@ public class CreateStorageroomPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment
-                return new MapsRootFragment();
+                return new CreateStoragePage1Fragment();
             case 1: // Fragment # 0 - This will show FirstFragment different title
                 return new CreateStoragePage2Fragment();
             case 2: // Fragment # 0 - This will show FirstFragment different title
-                return new CreateStoragePage1Fragment();
+                return new CreateStoragePage3Fragment();
             case 3: // Fragment # 0 - This will show FirstFragment different title
-                return new UserFragment();
+                return new CreateStoragePage4Fragment();
             default:
                 return null;
         }

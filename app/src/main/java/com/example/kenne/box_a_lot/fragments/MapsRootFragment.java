@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.kenne.box_a_lot.CreateStorageroomActivity;
 import com.example.kenne.box_a_lot.LoginActivity;
 import com.example.kenne.box_a_lot.MainActivity;
 import com.example.kenne.box_a_lot.R;
@@ -116,6 +117,8 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         listFab = view.findViewById(R.id.listviewFabBtn);
+        createStorageFab = view.findViewById(R.id.createStorageFabBtn);
+
         listFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +141,13 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
                     break;
                 }
 
+            }
+        });
+        createStorageFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CreateStorageroomActivity.class);
+                startActivity(intent);
             }
         });
 

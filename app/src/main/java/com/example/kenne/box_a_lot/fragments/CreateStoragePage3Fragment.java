@@ -9,9 +9,9 @@ import com.example.kenne.box_a_lot.R;
 
 import androidx.fragment.app.Fragment;
 
-public class CreateStoragePage1Fragment extends Fragment {
+public class CreateStoragePage3Fragment extends Fragment {
 
-    public CreateStoragePage1Fragment() {
+    public CreateStoragePage3Fragment() {
         // Required empty public constructor
     }
 
@@ -28,8 +28,6 @@ public class CreateStoragePage1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_storageroom_page1, container, false);
+        return inflater.inflate(R.layout.fragment_create_storageroom_page3, container, false);
     }
-
 }
-

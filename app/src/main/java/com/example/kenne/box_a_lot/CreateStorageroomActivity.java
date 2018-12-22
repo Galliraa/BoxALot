@@ -2,6 +2,7 @@ package com.example.kenne.box_a_lot;
 
 import android.os.Bundle;
 
+import com.example.kenne.box_a_lot.adapters.CreateStorageroomPagerAdapter;
 import com.example.kenne.box_a_lot.customViews.LockableViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +17,7 @@ public class CreateStorageroomActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private CreateStorageroomPagerAdapter adapterViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,5 +28,8 @@ public class CreateStorageroomActivity extends AppCompatActivity {
 
         vpPager = (LockableViewPager) findViewById(R.id.create_storageroom_viewpager);
 
+        adapterViewPager = new CreateStorageroomPagerAdapter(getSupportFragmentManager(), getApplicationContext());
+
+        vpPager.setAdapter(adapterViewPager);
     }
 }
