@@ -1,10 +1,6 @@
 package com.example.kenne.box_a_lot.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
 import android.view.ViewGroup;
 
 import com.example.kenne.box_a_lot.fragments.CreateStoragePage1Fragment;
@@ -29,13 +25,6 @@ public class CreateStorageroomPagerAdapter extends FragmentPagerAdapter {
     private Context context;
     private Map<Integer,String> fragmentTags;
     private FragmentManager fm;
-
-    private int[] tabIcons = {
-            android.R.drawable.ic_menu_search,
-            android.R.drawable.ic_menu_info_details,
-            android.R.drawable.ic_menu_agenda,
-            android.R.drawable.ic_menu_my_calendar
-    };
 
     public CreateStorageroomPagerAdapter(FragmentManager fragmentManager, Context c) {
         super(fragmentManager);
@@ -95,20 +84,5 @@ public class CreateStorageroomPagerAdapter extends FragmentPagerAdapter {
             f.update();
         }
         return super.getItemPosition(object);
-    }
-
-    // Returns the page title for the top indicator
-    @Override
-    public CharSequence getPageTitle(int position) {
-
-        //     if (position == 0) {
-        SpannableStringBuilder sb = new SpannableStringBuilder(" "); // space added before text for convenience
-
-        Drawable drawable = context.getResources().getDrawable(tabIcons[position]);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
-        sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return sb;
-
     }
 }

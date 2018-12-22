@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 
 import com.example.kenne.box_a_lot.R;
 
-import androidx.fragment.app.Fragment;
 
-
-public class CreateStoragePage2Fragment extends Fragment {
+public class CreateStoragePage2Fragment extends CreateStoragePageFragment {
 
     public CreateStoragePage2Fragment() {
         // Required empty public constructor

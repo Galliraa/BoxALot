@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 
 import com.example.kenne.box_a_lot.R;
 
-import androidx.fragment.app.Fragment;
-
-public class CreateStoragePage4Fragment extends Fragment {
+public class CreateStoragePage4Fragment extends CreateStoragePageFragment {
 
     public CreateStoragePage4Fragment() {
         // Required empty public constructor

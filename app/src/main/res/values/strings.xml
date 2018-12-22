@@ -40,6 +40,15 @@
     <string name="action_search">Søg på område</string>
     <string name="search_hint">Søg efter placering</string>
     <string name="Add_pic">Tilføj billeder</string>
+    <string name="createStorageBackBtnTxt">Tilbage</string>
+    <string name="createStorageNextBtnTxt">næste</string>
+    <string name="createStorageNextBtnCreateTxt">Opret</string>
+    <string name="createStorageroomPage1SqmPriceTVHintTxt">Kvm pris</string>
+    <string name="createStorageroomPage1PriceETHintTxt">Pris</string>
+    <string name="createStorageroomPage1LengthETHintTxt">Længde</string>
+    <string name="createStorageroomPage1HeadlineTxt">Depot</string>
+    <string name="createStorageroomPage1TypeStorageHeadlineTxt">Type opbevaring</string>
+    <string name="createStorageroomPage1WidthETHintTxt">Bredde</string>
 
 
     <string-array name="type_deport_array">

@@ -2,53 +2,54 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gbackground">
 
 
-    <EditText
-        android:id="@+id/editText4"
+    <TextView
+        android:id="@+id/create_storageroom_page1_sqm_price_TV"
         android:layout_width="80dp"
         android:layout_height="40dp"
-        android:hint="Kvm pris"
+        android:hint="@string/createStorageroomPage1SqmPriceTVHintTxt"
         android:textSize="18dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/editText"
-        app:layout_constraintTop_toTopOf="@+id/editText3" />
+        app:layout_constraintEnd_toEndOf="@+id/create_storageroom_page1_length_ET"
+        app:layout_constraintTop_toTopOf="@+id/create_storageroom_page1_price_ET" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/create_storageroom_page1_price_ET"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_marginTop="50dp"
-        android:hint="Pris"
+        android:hint="@string/createStorageroomPage1PriceETHintTxt"
+        android:inputType="numberDecimal"
         android:textSize="18dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/editText2"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintStart_toStartOf="@+id/create_storageroom_page1_width_ET"
+        app:layout_constraintTop_toBottomOf="@+id/create_storageroom_page1_width_ET" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/create_storageroom_page1_length_ET"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
-        android:hint="Længde"
+        android:inputType="numberDecimal"
+        android:hint="@string/createStorageroomPage1LengthETHintTxt"
         android:textStyle="bold"
         android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="@+id/spinner2"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+        app:layout_constraintEnd_toEndOf="@+id/create_storageroom_page1_type_storage_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/create_storageroom_page1_type_storage_spinner" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/create_storageroom_page1_headline_TV"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Depot"
+        android:text="@string/createStorageroomPage1HeadlineTxt"
         android:textSize="30dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +57,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.example.kenne.box_a_lot.customViews.NoDefaultSpinner
-        android:id="@+id/spinner2"
+        android:id="@+id/create_storageroom_page1_type_storage_spinner"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
@@ -66,32 +67,33 @@
         android:prompt="@string/Spinner_txt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/create_storageroom_page1_type_storage_headline_TV"
         style="@style/Base.Widget.AppCompat.Spinner.Underlined"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/create_storageroom_page1_type_storage_headline_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="50dp"
-        android:text="Type opbevaring"
+        android:text="@string/createStorageroomPage1TypeStorageHeadlineTxt"
         android:textStyle="bold"
         android:textSize="18dp"
-        app:layout_constraintStart_toStartOf="@+id/spinner2"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="@+id/create_storageroom_page1_type_storage_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/create_storageroom_page1_headline_TV" />
 
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/create_storageroom_page1_width_ET"
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="30dp"
-        android:hint="Bredde"
+        android:hint="@string/createStorageroomPage1WidthETHintTxt"
+        android:inputType="numberDecimal"
         android:textStyle="bold"
         android:textSize="18dp"
-        app:layout_constraintStart_toStartOf="@+id/spinner2"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+        app:layout_constraintStart_toStartOf="@+id/create_storageroom_page1_type_storage_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/create_storageroom_page1_type_storage_spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
