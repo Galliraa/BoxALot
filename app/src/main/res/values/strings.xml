@@ -39,6 +39,7 @@
     <string name="sign_in">Log ind</string>
     <string name="action_search">Søg på område</string>
     <string name="search_hint">Søg efter placering</string>
+    <string name="Add_pic">Tilføj billeder</string>
 
 
     <string-array name="type_deport_array">
