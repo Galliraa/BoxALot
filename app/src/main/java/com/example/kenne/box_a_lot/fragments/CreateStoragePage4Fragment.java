@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.kenne.box_a_lot.R;
+import com.example.kenne.box_a_lot.models.StorageRoom;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -102,4 +103,14 @@ public class CreateStoragePage4Fragment extends CreateStoragePageFragment {
                 }
             }
     }
+
+    @Override
+    public boolean getData(StorageRoom storageroom) {
+        return true;
+    }
+
+    public ImageView[] getImageviewArray(){
+        return myImageViewArray;
+    }
+
 }

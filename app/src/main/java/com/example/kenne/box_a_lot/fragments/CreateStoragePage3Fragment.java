@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.kenne.box_a_lot.R;
 import com.example.kenne.box_a_lot.classes.GeocodingLocation;
+import com.example.kenne.box_a_lot.models.StorageRoom;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.places.Place;
@@ -215,5 +216,13 @@ public class CreateStoragePage3Fragment extends CreateStoragePageFragment implem
             return "You must enter an address";
 
         return null;
+    }
+
+    @Override
+    public boolean getData(StorageRoom storageroom) {
+
+        storageroom.setAddress(addressStrings);
+        storageroom.setCoordinates(locationAddress);
+        return true;
     }
 }

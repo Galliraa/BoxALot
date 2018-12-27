@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.kenne.box_a_lot.R;
+import com.example.kenne.box_a_lot.models.StorageRoom;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -166,6 +167,19 @@ public class CreateStoragePage1Fragment extends CreateStoragePageFragment {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean getData(StorageRoom storageroom) {
+
+        double length = Integer.parseInt(lengthET.getText().toString());
+        double width = Integer.parseInt(widthET.getText().toString());
+
+        storageroom.setPrice(priceET.getText().toString());
+        storageroom.setSize(Double.toString(length*width));
+        storageroom.setType(typeStorageSpinner.getSelectedItem().toString());
+
+        return true;
     }
 }
 

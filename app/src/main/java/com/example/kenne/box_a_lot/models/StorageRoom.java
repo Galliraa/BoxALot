@@ -29,6 +29,7 @@ public class StorageRoom {
         this.setUserId((FirebaseUser) document.get("userId"));
         this.setDesc((String) document.get("desc"));
         this.setSize((String) document.get("size"));
+        this.setType((String) document.get("type"));
     }
 
     public String getStorageRoomId() {
@@ -92,5 +93,10 @@ public class StorageRoom {
     public String getSize(){return  (String) StorageMap.get("size");}
     public void setSize(String size) {
         this.StorageMap.put("size", size);
+    }
+
+    public String getType(){return  (String) StorageMap.get("type");}
+    public void setType(String type) {
+        this.StorageMap.put("type", type);
     }
 }
