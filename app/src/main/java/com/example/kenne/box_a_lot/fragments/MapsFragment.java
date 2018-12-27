@@ -207,7 +207,6 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
     }
 
     public void selectionChanged(MarkerOptions marker){
-
         markerMap.add(mMap.addMarker(marker).getId());
     }
 

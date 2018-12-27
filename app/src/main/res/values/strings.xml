@@ -45,10 +45,10 @@
     <string name="createStorageNextBtnCreateTxt">Opret</string>
     <string name="createStorageroomPage1SqmPriceTVHintTxt">Kvm pris</string>
     <string name="createStorageroomPage1PriceETHintTxt">Pris</string>
-    <string name="createStorageroomPage1LengthETHintTxt">Længde</string>
+    <string name="createStorageroomPage1LengthETHintTxt">Længde i meter</string>
     <string name="createStorageroomPage1HeadlineTxt">Depot</string>
     <string name="createStorageroomPage1TypeStorageHeadlineTxt">Type opbevaring</string>
-    <string name="createStorageroomPage1WidthETHintTxt">Bredde</string>
+    <string name="createStorageroomPage1WidthETHintTxt">Bredde i meter</string>
 
 
     <string-array name="type_deport_array">

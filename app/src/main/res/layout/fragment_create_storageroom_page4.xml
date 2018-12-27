@@ -23,6 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <GridLayout
+        android:id="@+id/ph0"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
@@ -38,7 +39,7 @@
         >
 
         <ImageView
-            android:id="@+id/ph0024"
+            android:id="@+id/ph00"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="2dp"
@@ -49,7 +50,7 @@
 
 
         <ImageView
-            android:id="@+id/ph00242"
+            android:id="@+id/ph01"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="2dp"
@@ -59,7 +60,7 @@
             />
 
         <ImageView
-            android:id="@+id/ph0023"
+            android:id="@+id/ph02"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="2dp"
@@ -68,7 +69,7 @@
             android:layout_rowWeight="1"/>
 
         <ImageView
-            android:id="@+id/ph002"
+            android:id="@+id/ph03"
             android:layout_margin="2dp"
             android:layout_width="0dp"
             android:layout_height="0dp"

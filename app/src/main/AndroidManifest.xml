@@ -71,7 +71,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".CreateStorageActivity"
+            android:name=".CreateStorageroomActivity"
             android:label="@string/title_activity_create_storage"
             android:parentActivityName=".Start"
             android:screenOrientation="portrait"
@@ -109,7 +109,6 @@
         <!-- Search results activity -->
 
         <activity android:name=".StorageroomViewer" />
-        <activity android:name=".CreateStorageroomActivity"></activity>
     </application>
 
 </manifest>

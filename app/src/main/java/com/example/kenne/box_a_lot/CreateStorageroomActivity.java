@@ -38,6 +38,7 @@ public class CreateStorageroomActivity extends AppCompatActivity {
         VPHeader.setupWithViewPager(vpPager, true);
         adapterViewPager = new CreateStorageroomPagerAdapter(getSupportFragmentManager(), getApplicationContext());
         vpPager.setAdapter(adapterViewPager);
+        vpPager.setOffscreenPageLimit(4);
 
         nextBtn = findViewById(R.id.create_storageroom_next_button);
         previousBtn = findViewById(R.id.create_storageroom_previous_button);
@@ -46,12 +47,14 @@ public class CreateStorageroomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String error = ((CreateStoragePageFragment)(((CreateStorageroomPagerAdapter)vpPager.getAdapter()).getFragment(vpPager.getCurrentItem()))).ValidateUserInput();
+                String error = ((CreateStoragePageFragment)(((CreateStorageroomPagerAdapter)vpPager.getAdapter()).getFragment(vpPager.getCurrentItem()))).validateUserInput();
                 if(error != null){
 
                     errorTV.setText(error);
                     return;
                 }
+
+                errorTV.setText("");
 
 
                     switch(vpPager.getCurrentItem()){
@@ -67,6 +70,7 @@ public class CreateStorageroomActivity extends AppCompatActivity {
                         nextBtn.setText(R.string.createStorageNextBtnCreateTxt);
                         break;
                     case 3:
+                        //createStorageroom();
                         break;
 
                 }
@@ -85,7 +89,12 @@ public class CreateStorageroomActivity extends AppCompatActivity {
                 }
 
                 vpPager.setCurrentItem(vpPager.getCurrentItem()-1);
+                errorTV.setText("");
             }
         });
     }
+
+//    private boolean createStorageroom(){
+
+    //}
 }
