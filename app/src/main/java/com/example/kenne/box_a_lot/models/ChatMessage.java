@@ -8,16 +8,18 @@ public class ChatMessage {
     private String photoUrl;
     private String imageUrl;
     private String uid;
+    private Long timestamp;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(String text, String name, String photoUrl, String imageUrl, String uid) {
+    public ChatMessage(String text, String name, String photoUrl, String imageUrl, String uid, Long timestamp) {
         this.text = text;
         this.name = name;
         this.photoUrl = photoUrl;
         this.imageUrl = imageUrl;
         this.uid = uid;
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -66,5 +68,13 @@ public class ChatMessage {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public Long getTime() {
+        return this.timestamp;
+    }
+
+    public void setTime(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }

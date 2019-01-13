@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.kenne.box_a_lot.adapters.MessageListAdapter;
 import com.example.kenne.box_a_lot.models.ChatMessage;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -63,7 +64,7 @@ public class ContactStorage extends AppCompatActivity {
 
     // Firebase instance variables
     private DatabaseReference mFirebaseDatabaseReference;
-    private FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder> mFirebaseAdapter;
+    private FirebaseRecyclerAdapter<ChatMessage, RecyclerView.ViewHolder>  mFirebaseAdapter;
 
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
 
@@ -137,66 +138,7 @@ public class ContactStorage extends AppCompatActivity {
                     new FirebaseRecyclerOptions.Builder<ChatMessage>()
                             .setQuery(messagesRef, parser)
                             .build();
-            mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(options) {
-                @Override
-                public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-                    LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                    return new MessageViewHolder(inflater.inflate(R.layout.item_message, viewGroup, false));
-                }
-
-                @Override
-                protected void onBindViewHolder(final MessageViewHolder viewHolder,
-                                                int position,
-                                                ChatMessage chatMessage) {
-                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                    if (chatMessage.getText() != null) {
-                        viewHolder.messageTextView.setText(chatMessage.getText());
-                        viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
-                        viewHolder.messageImageView.setVisibility(ImageView.GONE);
-                    } else if (chatMessage.getImageUrl() != null) {
-                        String imageUrl = chatMessage.getImageUrl();
-                        if (imageUrl.startsWith("gs://")) {
-                            StorageReference storageReference = FirebaseStorage.getInstance()
-                                    .getReferenceFromUrl(imageUrl);
-                            storageReference.getDownloadUrl().addOnCompleteListener(
-                                    new OnCompleteListener<Uri>() {
-                                        private String TAG = "ContactStorage";
-
-                                        @Override
-                                        public void onComplete(@NonNull Task<Uri> task) {
-                                            if (task.isSuccessful()) {
-                                                String downloadUrl = task.getResult().toString();
-                                                Glide.with(viewHolder.messageImageView.getContext())
-                                                        .load(downloadUrl)
-                                                        .into(viewHolder.messageImageView);
-                                            } else {
-                                                Log.w(TAG, "Getting download url was not successful.",
-                                                        task.getException());
-                                            }
-                                        }
-                                    });
-                        } else {
-                            Glide.with(viewHolder.messageImageView.getContext())
-                                    .load(chatMessage.getImageUrl())
-                                    .into(viewHolder.messageImageView);
-                        }
-                        viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
-                        viewHolder.messageTextView.setVisibility(TextView.GONE);
-                    }
-
-
-                    viewHolder.messengerTextView.setText(chatMessage.getName());
-                    if (chatMessage.getPhotoUrl() == null) {
-                        viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(ContactStorage.this,
-                                R.drawable.ic_person_black_24dp));
-                    } else {
-                        Glide.with(ContactStorage.this)
-                                .load(chatMessage.getPhotoUrl())
-                                .into(viewHolder.messengerImageView);
-                    }
-
-                }
-            };
+            mFirebaseAdapter = new MessageListAdapter(options, this);
 
             ((RecyclerView.Adapter)((Object)mFirebaseAdapter)).registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
@@ -246,9 +188,11 @@ public class ContactStorage extends AppCompatActivity {
                 public void onClick(View view) {
                     ChatMessage chatMessage = new
                             ChatMessage(mMessageEditText.getText().toString(),
-                            null,
+                            FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
                             mPhotoUrl,
-                            null /* no image */, mFirebaseUser.getUid());
+                            null /* no image */,
+                            mFirebaseUser.getUid(),
+                            System.currentTimeMillis());
                     mFirebaseDatabaseReference.child(MESSAGES_CHILD + storageID + "/" + mFirebaseUser.getUid())
                             .push().setValue(chatMessage);
                     mMessageEditText.setText("");
@@ -289,7 +233,7 @@ public class ContactStorage extends AppCompatActivity {
                     Log.d(TAG, "Uri: " + uri.toString());
 
                     ChatMessage tempMessage = new ChatMessage(null, null, mPhotoUrl,
-                            LOADING_IMAGE_URL, mFirebaseUser.getUid());
+                            LOADING_IMAGE_URL, mFirebaseUser.getUid(), System.currentTimeMillis());
                     mFirebaseDatabaseReference.child(MESSAGES_CHILD + storageID + "/" + mFirebaseUser.getUid()).push()
                             .setValue(tempMessage, new DatabaseReference.CompletionListener() {
                                 @Override
@@ -372,7 +316,7 @@ public class ContactStorage extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Uri downloadUri = task.getResult();
                             ChatMessage chatMessage =
-                                    new ChatMessage(null, null, mPhotoUrl, downloadUri.toString(), mFirebaseUser.getUid());
+                                    new ChatMessage(null, null, mPhotoUrl, downloadUri.toString(), mFirebaseUser.getUid(), System.currentTimeMillis());
                             mFirebaseDatabaseReference.child(MESSAGES_CHILD + storageID + "/"  + mFirebaseUser.getUid()).child(key)
                                     .setValue(chatMessage);
                         } else {

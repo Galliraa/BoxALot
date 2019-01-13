@@ -242,7 +242,8 @@ public class CreateStorageActivity extends AppCompatActivity {
                                                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                         @Override
                                                         public void onSuccess(DocumentReference documentReference) {
-                                                            CollectionReference geoFirestoreRef = db.collection("StorageRooms");
+                                                            CollectionReference geoFirestoreRef = db.collection("StorageRooms/" + FirebaseAuth.getInstance()
+                                                                    .getCurrentUser().getUid());
                                                             GeoFirestore geoFirestore = new GeoFirestore(geoFirestoreRef);
 
                                                             geoFirestore = new GeoFirestore(db.collection("GeoFire"));

@@ -183,10 +183,10 @@ public class MapsRootFragment extends Fragment implements ChangeFragmentInterfac
                     StorageRoom.ITEMS.clear();
                     markerArray = new ArrayList<>();
                     mapsFragment.clearMap();
-                    //storage
+
                     LatLng searchLocation = place.getLatLng();
 
-                    double radius = 10;//111.19*(searchLocation.northeast.latitude - searchLocation.getCenter().latitude);
+                    double radius = 10;
 
                     mapsFragment.moveToLocation(searchLocation, radius);
 
