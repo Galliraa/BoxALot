@@ -15,12 +15,15 @@ import com.example.kenne.box_a_lot.customViews.LockableViewPager;
 import com.example.kenne.box_a_lot.fragments.CreateStoragePage4Fragment;
 import com.example.kenne.box_a_lot.fragments.CreateStoragePageFragment;
 import com.example.kenne.box_a_lot.models.StorageRoom;
+import com.example.kenne.box_a_lot.models.User;
 import com.example.kenne.box_a_lot.other.ViewDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,10 +46,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateStorageroomActivity extends AppCompatActivity {
 
+    private static final String MESSAGES_CHILD = "Users/";
+
     private LockableViewPager vpPager;
     private TabLayout VPHeader;
     final int MAX_PIC_NUMBER = 4;
     private static final int LOGIN_REQUEST = 1;
+
+    private DatabaseReference mFirebaseDatabaseReference;
+    private FirebaseAuth auth;
 
     private FirebaseStorage FBstorage = FirebaseStorage.getInstance();
     private int counter = 0;
@@ -67,6 +75,10 @@ public class CreateStorageroomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_storageroom);
+
+        //Get Firebase auth instance
+        auth = FirebaseAuth.getInstance();
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         viewDialog = new ViewDialog(this);
 
@@ -198,12 +210,29 @@ public class CreateStorageroomActivity extends AppCompatActivity {
                                                             @Override
                                                             public void onComplete(Exception exception) {
                                                                 if (exception == null) {
-                                                                    viewDialog.hideDialog();
-                                                                    System.out.println("Location saved on server successfully!");
-                                                                    Intent intent = new Intent(getApplicationContext(), StorageroomViewer.class);
-                                                                    intent.putExtra("storageroom", (Serializable) storageroom.StorageMap);
-                                                                    CreateStorageroomActivity.this.finish();
-                                                                    startActivity(intent);
+                                                                    User user = new User();
+                                                                    List<String> roomIds = new ArrayList<String>();
+                                                                    roomIds.add(documentReference.getId());
+                                                                    user.setStorageroomIds(roomIds);
+
+                                                                    mFirebaseDatabaseReference.child("MESSAGES_CHILD")
+                                                                            .child(auth.getCurrentUser().getUid())
+                                                                            .child("storageroomId")
+                                                                            .setValue(documentReference.getId());
+
+
+                                                                    mFirebaseDatabaseReference.child(MESSAGES_CHILD + "/" + auth.getCurrentUser().getUid()).updateChildren(user.getUserMap()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+                                                                            viewDialog.hideDialog();
+                                                                            System.out.println("Location saved on server successfully!");
+                                                                            Intent intent = new Intent(getApplicationContext(), StorageroomViewer.class);
+                                                                            intent.putExtra("storageroom", (Serializable) storageroom.StorageMap);
+                                                                            CreateStorageroomActivity.this.finish();
+                                                                            startActivity(intent);
+                                                                        }
+                                                                    });
+
                                                                 }
                                                             }
                                                         });

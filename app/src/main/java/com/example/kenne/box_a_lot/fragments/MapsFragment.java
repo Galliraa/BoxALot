@@ -125,7 +125,8 @@ public class MapsFragment extends Fragment implements GoogleMap.OnCameraMoveStar
                                 // Got last known location. In some rare situations this can be null.
                                 if (location != null) {
                                     mMap.moveCamera(CameraUpdateFactory
-                                            .newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 10));
+                                            //.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 10));
+                                            .newLatLngZoom(new LatLng(0, 0), 10));
                                     // Logic to handle location object
                                 }
                             }

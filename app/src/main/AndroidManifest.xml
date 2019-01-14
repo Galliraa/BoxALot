@@ -108,7 +108,8 @@
 
         <!-- Search results activity -->
 
-        <activity android:name=".StorageroomViewer" />
+        <activity android:name=".StorageroomViewer"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

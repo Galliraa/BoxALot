@@ -11,11 +11,8 @@ import android.widget.TextView;
 import com.example.kenne.box_a_lot.R;
 import com.example.kenne.box_a_lot.fragments.StorageRoomFragment.OnListFragmentInteractionListener;
 import com.example.kenne.box_a_lot.models.StorageRoom;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

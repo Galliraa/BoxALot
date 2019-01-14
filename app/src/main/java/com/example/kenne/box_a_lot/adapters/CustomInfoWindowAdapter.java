@@ -1,23 +1,19 @@
 package com.example.kenne.box_a_lot.adapters;
 
 import android.content.Context;
-import android.net.Uri;
-//import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.kenne.box_a_lot.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+//import android.support.annotation.NonNull;
 
 
 public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter  {

@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.kenne.box_a_lot.models.User;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -37,6 +38,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
@@ -50,6 +53,9 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "LoginActivity";
+    private static final String MESSAGES_CHILD = "Users/";
+    private DatabaseReference mFirebaseDatabaseReference;
+    private FirebaseAuth auth;
 
     protected EditText usernameEditText;
     protected EditText passwordEditText;
@@ -81,6 +87,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Get Firebase auth instance
+        auth = FirebaseAuth.getInstance();
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         GoogleSignInOptions options =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -284,6 +293,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            if(task.getResult().getAdditionalUserInfo().isNewUser())
+                            {
+                                User user = new User();
+                                user.setName(task.getResult().getUser().getDisplayName());
+                                user.setPhoneNumber(task.getResult().getUser().getPhoneNumber());
+                                mFirebaseDatabaseReference.child(MESSAGES_CHILD +  "/" + auth.getCurrentUser().getUid()).setValue(user.getUserMap());
+                            }
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();

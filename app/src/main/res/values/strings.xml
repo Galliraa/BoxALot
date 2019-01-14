@@ -2,7 +2,7 @@
     <string name="app_name">Box-A-Lot</string>
     <string name="title_activity_map">mapActivity</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_create_storage">CreateStorageActivity</string>
+    <string name="title_activity_create_storage">CreateStorageroomActivity</string>
     <string name="input_room_address">Adresse på rummet?</string>
     <string name="input_room_city">By på rummet?</string>
     <string name="contact_landlord_btn">Contact Landlord</string>

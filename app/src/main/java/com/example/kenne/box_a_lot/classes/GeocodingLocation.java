@@ -8,11 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.common.util.concurrent.AtomicDoubleArray;
-
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Locale;
 
