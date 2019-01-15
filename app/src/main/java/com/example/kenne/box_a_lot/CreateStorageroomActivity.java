@@ -15,7 +15,6 @@ import com.example.kenne.box_a_lot.customViews.LockableViewPager;
 import com.example.kenne.box_a_lot.fragments.CreateStoragePage4Fragment;
 import com.example.kenne.box_a_lot.fragments.CreateStoragePageFragment;
 import com.example.kenne.box_a_lot.models.StorageRoom;
-import com.example.kenne.box_a_lot.models.User;
 import com.example.kenne.box_a_lot.other.ViewDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -210,18 +209,12 @@ public class CreateStorageroomActivity extends AppCompatActivity {
                                                             @Override
                                                             public void onComplete(Exception exception) {
                                                                 if (exception == null) {
-                                                                    User user = new User();
-                                                                    List<String> roomIds = new ArrayList<String>();
-                                                                    roomIds.add(documentReference.getId());
-                                                                    user.setStorageroomIds(roomIds);
 
-                                                                    mFirebaseDatabaseReference.child("MESSAGES_CHILD")
+                                                                    mFirebaseDatabaseReference.child(MESSAGES_CHILD)
                                                                             .child(auth.getCurrentUser().getUid())
-                                                                            .child("storageroomId")
-                                                                            .setValue(documentReference.getId());
-
-
-                                                                    mFirebaseDatabaseReference.child(MESSAGES_CHILD + "/" + auth.getCurrentUser().getUid()).updateChildren(user.getUserMap()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            .child("storageroomIds")
+                                                                            .child(documentReference.getId())
+                                                                            .setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
                                                                             viewDialog.hideDialog();
